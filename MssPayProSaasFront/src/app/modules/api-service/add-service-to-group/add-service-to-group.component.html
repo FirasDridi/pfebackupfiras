@@ -1,0 +1,12 @@
+<div class="add-service-to-group-container">
+    <h2>Add Service to client</h2>
+    <form [formGroup]="serviceForm" (ngSubmit)="addServiceToGroup()">
+        <mat-form-field>
+            <input matInput placeholder="Service ID" formControlName="serviceId" required>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Group ID" formControlName="groupId" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Add Service to Group</button>
+    </form>
+</div>

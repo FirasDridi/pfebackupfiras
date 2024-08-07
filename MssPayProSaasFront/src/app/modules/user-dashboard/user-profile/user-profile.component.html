@@ -1,0 +1,35 @@
+<div class="user-profile-card">
+    <div *ngIf="user" class="user-details">
+        <h3>User Details</h3>
+        <table>
+            <tr>
+                <td><strong>Username:</strong></td>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <td><strong>Email:</strong></td>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <td><strong>First Name:</strong></td>
+                <td>{{ user.firstName }}</td>
+            </tr>
+            <tr>
+                <td><strong>Last Name:</strong></td>
+                <td>{{ user.lastName }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div *ngIf="userGroups && userGroups.length > 0" class="user-groups">
+        <h3>User Clients</h3>
+        <table>
+            <tr>
+                <th>Client Group Name</th>
+            </tr>
+            <tr *ngFor="let group of userGroups">
+                <td>{{ group.groupName }}</td>
+            </tr>
+        </table>
+    </div>
+</div>

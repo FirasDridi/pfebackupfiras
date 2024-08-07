@@ -1,0 +1,27 @@
+<div class="notifications-container">
+    <button mat-icon-button [matMenuTriggerFor]="notificationsMenu">
+    <mat-icon>notifications</mat-icon>
+    <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+  </button>
+    <mat-menu #notificationsMenu="matMenu" class="notifications-menu">
+        <ng-container *ngFor="let notification of notifications">
+            <button mat-menu-item (click)="markAsRead(notification.id)">
+        {{ notification.user.username }} wants to subscribe to {{ notification.serviceName }}
+      </button>
+        </ng-container>
+        <button mat-menu-item *ngIf="notifications.length === 0">
+      No new notifications
+    </button>
+    </mat-menu>
+</div>
+
+<div *ngIf="requests.length > 0" class="requests-container">
+    <div *ngFor="let request of requests" class="request-item">
+        <p>Subscription Request for Service: {{ request.serviceName }} from Group: {{ request.group.name }}</p>
+        <button mat-button (click)="approveRequest(request.id)">Approve</button>
+        <button mat-button (click)="rejectRequest(request.id)">Reject</button>
+    </div>
+</div>
+<div *ngIf="requests.length === 0" class="no-requests">
+    <p>No pending requests</p>
+</div>

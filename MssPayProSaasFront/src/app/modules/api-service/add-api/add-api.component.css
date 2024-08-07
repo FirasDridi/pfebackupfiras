@@ -1,0 +1,42 @@
+/* add-api.component.css */
+
+
+/* Adjust the width of the form */
+
+form {
+    width: calc(100% - 40px);
+    /* Adjust the width to fit the available space */
+    margin: auto;
+    /* Center the form horizontally */
+    display: flex;
+    flex-direction: column;
+    /* Stack form elements vertically */
+}
+
+
+/* Style form fields */
+
+mat-form-field {
+    width: 100%;
+    /* Make form fields occupy full width */
+}
+
+
+/* Style the button container */
+
+.button-container {
+    text-align: center;
+    /* Center-align buttons */
+    margin-top: 20px;
+    /* Adjust spacing between form and buttons */
+    width: calc(100% - 40px);
+    /* Adjust the width to fit the available space */
+}
+
+
+/* Style buttons */
+
+button {
+    margin: 10px;
+    /* Adjust spacing between buttons */
+}

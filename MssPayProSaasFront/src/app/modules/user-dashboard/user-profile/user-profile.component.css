@@ -1,0 +1,74 @@
+/* user-profile-page.component.css */
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    background-color: #e9ecef;
+    margin: 0;
+    padding: 0;
+}
+
+.user-profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 40px auto;
+    border: 1px solid #dcdcdc;
+}
+
+.user-details,
+.user-groups {
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    /* Center align the text */
+}
+
+h3 {
+    margin-bottom: 20px;
+    color: #20B2AA;
+    font-weight: 500;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    text-align: center;
+    /* Center align the text */
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: center;
+    /* Center align the text */
+    border-bottom: 1px solid #dcdcdc;
+}
+
+th {
+    background-color: #f5f5f5;
+    color: #333;
+    font-weight: 500;
+}
+
+td {
+    color: #555;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}

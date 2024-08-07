@@ -1,0 +1,17 @@
+<mat-toolbar color="primary" class="custom-toolbar">
+    <span>{{ title }}</span>
+</mat-toolbar>
+
+<mat-tab-group class="custom-tab-group" backgroundColor="primary" color="accent">
+    <mat-tab *ngFor="let item of menuItems" [label]="item.label || ''">
+        <ng-template mat-tab-label>
+            <section class="tab-section-container" [routerLink]="item.routerLink">
+                <mat-icon>{{ item.icon }}</mat-icon> {{ item.label || '' }}
+            </section>
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>
+
+<div class="page-content">
+    <router-outlet></router-outlet>
+</div>

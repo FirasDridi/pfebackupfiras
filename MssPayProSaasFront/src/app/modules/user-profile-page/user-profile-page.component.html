@@ -1,0 +1,28 @@
+<div class="user-profile">
+    <div class="profile-section">
+        <h2>User Profile</h2>
+        <div class="profile-circle">
+
+        </div>
+        <ul>
+            <li><strong>Name:</strong> {{ userProfile.name }} {{ userProfile.lastName }}</li>
+            <li><strong>Email:</strong> {{ userProfile.email }}</li>
+            <li><strong>Username:</strong> {{ userProfile.username }}</li>
+        </ul>
+        <button mat-button (click)="keycloakService.logout()">Logout</button>
+    </div>
+
+    <div class="apis-section">
+        <h2>Accessible APIs</h2>
+        <ul>
+            <li *ngFor="let api of accessibleApis">{{ api.name }}</li>
+        </ul>
+    </div>
+
+    <div class="groups-section">
+        <h2>User Clients</h2>
+        <ul>
+            <li *ngFor="let group of userGroups">{{ group.name }}</li>
+        </ul>
+    </div>
+</div>

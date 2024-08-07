@@ -1,0 +1,64 @@
+/* admindash.component.css */
+
+.layout-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.layout-topbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.notification-card {
+    margin: 0.5em;
+    padding: 0;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-time {
+    font-size: 0.8em;
+    color: gray;
+}
+
+.notification-body {
+    margin-top: 0.5em;
+}
+
+.notification-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5em;
+}
+
+.notification-actions button {
+    margin-right: 0.5em;
+}
+
+
+/* admindash.component.css */
+
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 1000;
+}
+
+.snack-bar-success {
+    background-color: #4caf50;
+    color: white;
+}

@@ -1,0 +1,13 @@
+/* src/app/modules/facture/user-invoices/user-invoices.component.css */
+
+.user-invoices-container {
+    margin: 20px;
+}
+
+table {
+    width: 100%;
+}
+
+h2 {
+    color: #20b2aa;
+}

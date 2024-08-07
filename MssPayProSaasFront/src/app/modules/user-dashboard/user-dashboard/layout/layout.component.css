@@ -1,0 +1,20 @@
+/* src/app/layout/layout.component.css */
+
+.custom-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.custom-tab-group {
+    margin-top: 10px;
+}
+
+.page-content {
+    padding: 20px;
+}
+
+.tab-section-container {
+    display: flex;
+    align-items: center;
+}

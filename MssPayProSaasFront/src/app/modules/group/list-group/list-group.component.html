@@ -1,0 +1,41 @@
+<div class="container">
+    <h2>Clients List</h2>
+    <table mat-table [dataSource]="groups" class="mat-elevation-z8">
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let group"> {{group.name}} </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let group">
+                <button mat-icon-button (click)="viewUsers(group.id)" matTooltip="View Users" class="icon-button view-users">
+                <mat-icon>group</mat-icon>
+            </button>
+                <button mat-icon-button (click)="addUsers(group.id, group.name)" matTooltip="Add Users" class="icon-button add-users">
+                <mat-icon>person_add</mat-icon>
+            </button>
+                <button mat-icon-button (click)="addSuperUser(group.id, group.name)" matTooltip="Add Super User" class="icon-button add-super-user">
+                <mat-icon>supervised_user_circle</mat-icon>
+            </button>
+                <button mat-icon-button (click)="editGroup(group)" matTooltip="Edit Group" class="icon-button edit-group">
+                <mat-icon>edit</mat-icon>
+            </button>
+                <button mat-icon-button (click)="deleteGroup(group.id)" matTooltip="Delete Group" class="icon-button delete-group">
+                <mat-icon>delete</mat-icon>
+            </button>
+                <button mat-icon-button (click)="viewGroupInvoices(group.id)" matTooltip="View Invoices" class="icon-button view-invoices">
+                <mat-icon>receipt</mat-icon>
+            </button>
+                <button mat-button [ngClass]="{'green-button': group.tokenGenerated, 'gray-button': !group.tokenGenerated}" (click)="toggleToken(group.id)">
+                {{ group.tokenGenerated ? 'Delete Token' : 'Generate Token' }}
+            </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>

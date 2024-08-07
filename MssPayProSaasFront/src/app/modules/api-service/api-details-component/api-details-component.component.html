@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Clients and Users</h2>
+<mat-dialog-content *ngIf="serviceDetails" class="service-details-content">
+
+    <ul>
+        <li *ngFor="let group of serviceDetails.groups">{{ group.name }}</li>
+    </ul>
+
+    <div class="detail-item"><strong>Users:</strong>
+        <ul>
+            <li *ngFor="let user of serviceDetails.users">{{ user.userName }}</li>
+        </ul>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="close()" class="close-button" color="primary">Close</button>
+</mat-dialog-actions>

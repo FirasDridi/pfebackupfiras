@@ -1,0 +1,29 @@
+<div class="page-content mat-elevation-z8">
+    <div class="header-container">
+        <h3>Services</h3>
+        <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search Services">
+        </mat-form-field>
+    </div>
+
+    <mat-table [dataSource]="dataSource" class="custom-mat-table">
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef class="custom-header-cell"> Name </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="custom-cell"> {{element.name}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <mat-header-cell *matHeaderCellDef class="custom-header-cell"> Description </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="custom-cell"> {{element.description}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef class="custom-header-cell"> Status </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="custom-cell"> {{element.status}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns" class="custom-header-row"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" class="custom-row"></mat-row>
+    </mat-table>
+</div>

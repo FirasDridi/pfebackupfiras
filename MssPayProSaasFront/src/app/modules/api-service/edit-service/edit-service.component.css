@@ -1,0 +1,21 @@
+/* edit-service.component.css */
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* Add vertical spacing between form fields */
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    /* Align buttons at each end */
+}
+
+
+/* Adjust form field appearance */
+
+mat-form-field {
+    width: 100%;
+}
