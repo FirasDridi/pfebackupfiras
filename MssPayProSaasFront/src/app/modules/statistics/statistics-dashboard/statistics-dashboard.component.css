@@ -1,0 +1,119 @@
+/* Global Styles */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
+    /* Light background for better contrast */
+    color: #333;
+}
+
+
+/* Chart Title Styles */
+
+.chart-title {
+    color: #1a73e8;
+    /* Professional blue color */
+    font-size: 1.8rem;
+    /* Slightly larger font for titles */
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    /* Add letter spacing for a modern look */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+}
+
+
+/* Legend Container Styles */
+
+.custom-legend {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-top: 1px solid #ddd;
+    /* Separator line */
+    padding-top: 15px;
+}
+
+
+/* Legend Title Styles */
+
+.legend-title {
+    width: 100%;
+    font-size: 1.4rem;
+    color: #555;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* Letter spacing for consistency */
+}
+
+
+/* Legend Item Styles */
+
+.legend-item {
+    margin: 10px 20px;
+    /* Increased margin for better spacing */
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+
+/* Legend Color Box */
+
+.legend-color {
+    width: 20px;
+    /* Larger color box */
+    height: 20px;
+    display: inline-block;
+    margin-right: 10px;
+    border-radius: 4px;
+    /* Slightly rounded edges */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    /* Subtle shadow for depth */
+}
+
+
+/* Legend Label Styles */
+
+.legend-label {
+    font-weight: 600;
+    /* Slightly bolder */
+    margin-right: 8px;
+    color: #222;
+    /* Darker color for contrast */
+}
+
+
+/* Legend Value Styles */
+
+.legend-value {
+    color: #444;
+    /* Gray color for value text */
+    font-weight: 500;
+    /* Weight for differentiation */
+    font-size: 1.1rem;
+}
+
+
+/* Additional Styles */
+
+@media (max-width: 768px) {
+    .chart-title {
+        font-size: 1.5rem;
+    }
+    .custom-legend {
+        padding-top: 10px;
+    }
+    .legend-title {
+        font-size: 1.2rem;
+    }
+    .legend-item {
+        font-size: 1rem;
+    }
+}

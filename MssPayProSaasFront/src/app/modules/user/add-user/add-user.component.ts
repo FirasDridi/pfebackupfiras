@@ -14,13 +14,13 @@ export class AddUserComponent implements OnInit {
   addUserForm!: FormGroup;
   groupName: string;
   role: string;
-displayedUserColumns: any;
+  displayedUserColumns: any;
 
   constructor(
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
     private http: HttpClient,
-    private dialogRef: MatDialogRef<AddUserComponent>,
+    public dialogRef: MatDialogRef<AddUserComponent>, // Changed from private to public
     @Inject(MAT_DIALOG_DATA) public data: any,
     private keycloakService: KeycloakService
   ) {

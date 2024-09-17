@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -40,15 +41,20 @@ public class KafkaConsumerService {
                 int minute = timestampNode.get(4).asInt();
                 int second = timestampNode.get(5).asInt();
                 LocalDateTime timestamp = LocalDateTime.of(year, month, day, hour, minute, second);
-                accessLog.setTimestamp(timestamp);
+
+                // Only process logs with today's date
+                if (timestamp.toLocalDate().equals(LocalDate.now())) {
+                    accessLog.setTimestamp(timestamp);
+                    accessLog.setGroupId(jsonNode.get("groupId").asLong());
+                    accessLog.setUserId(jsonNode.get("userId").asText());
+                    accessLogRepository.save(accessLog);
+                    logger.debug("Saved access log: {}", accessLog);
+                } else {
+                    logger.debug("Skipped log with timestamp: {}", timestamp);
+                }
             } else {
                 logger.warn("Received empty or invalid timestamp, skipping setting the timestamp.");
             }
-
-            accessLog.setGroupId(jsonNode.get("groupId").asLong());
-            accessLog.setUserId(jsonNode.get("userId").asText());
-            accessLogRepository.save(accessLog);
-            logger.debug("Saved access log: {}", accessLog);
         } catch (JsonProcessingException e) {
             logger.error("Failed to process message", e);
         }

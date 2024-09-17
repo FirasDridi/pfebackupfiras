@@ -31,6 +31,8 @@ import { UserModule } from '../../user/user.module';
 import { MatTabsModule } from '@angular/material/tabs';
 import { UserRoutingModule } from '../../user/user-routing.module';
 import {MatMenuModule} from '@angular/material/menu';
+import { MatCardModule } from '@angular/material/card';
+import { AddUserDialogComponent } from './add-user-dialog/add-user-dialog.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,7 @@ import {MatMenuModule} from '@angular/material/menu';
     LoadingDialogComponent,
     ServiceDetailsDialogComponent,
     AddUserToGroupComponent,
+    AddUserDialogComponent,
   ],
   imports: [
     CommonModule,MatMenuModule,
@@ -63,7 +66,7 @@ import {MatMenuModule} from '@angular/material/menu';
     ButtonModule,
     MenubarModule,
     MatTabsModule,
-    UserModule, // Import UserModule to use AddUserComponent
+    UserModule,MatCardModule // Import UserModule to use AddUserComponent
     // UserRoutingModule,
   ],
   exports: [

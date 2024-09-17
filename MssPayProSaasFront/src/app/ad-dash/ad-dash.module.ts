@@ -20,6 +20,7 @@ import { AdminRequestsComponent } from './admindash/notifactionRequest/admin-req
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -46,7 +47,7 @@ import { MatSnackBarConfig } from '@angular/material/snack-bar';
     MatListItem,
     RouterModule,
     MatToolbarModule,
-    ApiServiceModule,MatBadgeModule,MatSnackBarModule
+    ApiServiceModule,MatBadgeModule,MatSnackBarModule,MatExpansionModule
   ],
   providers: [
     {

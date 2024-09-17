@@ -1,14 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { KeycloakService } from '../../../keycloak/keycloak.service';
-import { Router } from '@angular/router';
-
-interface MenuItem {
-  label: string;
-  icon: string;
-  routerLink: string;
-  command?: () => void;
-  visible?: boolean;
-}
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-layout',
@@ -18,44 +11,41 @@ interface MenuItem {
 export class LayoutComponent implements OnInit {
   title: string = 'User MssPayProSaas';
   isLoggedIn: boolean = false;
-  menuItems: MenuItem[] = [];
+  isSuperUser: boolean = false;
+  menuItems: any[] = [];
 
-  constructor(private keycloakService: KeycloakService) {}
+  constructor(private keycloakService: KeycloakService, private router: Router) {}
 
   ngOnInit(): void {
     this.isLoggedIn = this.keycloakService.isLoggedIn();
+    this.isSuperUser = this.keycloakService.hasRole('superuser');
+    this.setupMenuItems();
 
-    this.menuItems = [
-      { label: 'Dashboard', icon: 'home', routerLink: 'user-dashboard' },
-      { label: 'Profile', icon: 'person', routerLink: 'profile' },
-      { label: 'Services', icon: 'list', routerLink: 'services' },
-      {
-        label: 'All Services',
-        icon: 'view_module',
-        routerLink: 'all-services',
-      },
-      {
-        label: 'Login',
-        icon: 'login',
-        command: () => this.login(),
-        visible: !this.isLoggedIn,
-        routerLink: 'login',
-      },
-      {
-        label: 'Logout',
-        icon: 'logout',
-        command: () => this.logout(),
-        visible: this.isLoggedIn,
-        routerLink: 'logout',
-      },
-      {
-        label: 'My Account',
-        icon: 'account_circle',
-        command: () => this.accountManagement(),
-        visible: this.isLoggedIn,
-        routerLink: 'account',
-      },
-    ];
+    this.menuItems = this.menuItems.filter(item => item.visible !== false);
+
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
+      const currentRoute = this.router.url.split('/').pop();
+      this.updateTitle(currentRoute);
+    });
+  }
+
+  setupMenuItems(): void {
+    if (!this.isSuperUser) {
+      this.menuItems = [
+        { label: 'Profile', icon: 'person', routerLink: 'profile', visible: this.isLoggedIn },
+        { label: 'Services', icon: 'view_module', routerLink: 'services', visible: this.isLoggedIn },
+      ];
+    }
+
+    if (this.isSuperUser) {
+      this.menuItems = [
+        { label: 'Dashboard', icon: 'dashboard', routerLink: 'user-dashboard', visible: this.isLoggedIn },
+        { label: 'Profile', icon: 'person', routerLink: 'profile', visible: this.isLoggedIn },
+        { label: 'Services', icon: 'view_module', routerLink: 'services', visible: this.isLoggedIn },
+        { label: 'Service Usage', icon: 'history', routerLink: 'service-usage', visible: this.isLoggedIn },
+        { label: 'All Services', icon: 'view_list', routerLink: 'all-services', visible: this.isSuperUser },
+      ];
+    }
   }
 
   login(): void {
@@ -63,14 +53,33 @@ export class LayoutComponent implements OnInit {
   }
 
   logout(): void {
-    this.keycloakService.logout();
+    try {
+      this.keycloakService.logout();
+      this.router.navigate(['/login']);
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   }
 
-  accountManagement(): void {
-    // Redirect to account management page or perform account management actions
-  }
-
-  handleAction(item: any) {
-    console.log({ item });
+  private updateTitle(route: string | undefined): void {
+    switch (route) {
+      case 'user-dashboard':
+        this.title = 'Dashboard - User MssPayProSaas';
+        break;
+      case 'profile':
+        this.title = 'Profile - User MssPayProSaas';
+        break;
+      case 'services':
+        this.title = 'Services - User MssPayProSaas';
+        break;
+      case 'service-usage':
+        this.title = 'Service Usage - User MssPayProSaas';
+        break;
+      case 'all-services':
+        this.title = 'All Services - User MssPayProSaas';
+        break;
+      default:
+        this.title = 'User MssPayProSaas';
+    }
   }
 }

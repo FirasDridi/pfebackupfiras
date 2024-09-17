@@ -1,0 +1,31 @@
+<div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
+    <!-- Service Usage Pie Chart with Titles and Enhanced Legends -->
+    <div style="text-align: center; flex: 1; padding: 20px; max-width: 500px;">
+        <h3 class="chart-title">Service Usage Statistics</h3>
+        <ngx-charts-pie-chart [scheme]="colorScheme" [results]="usageChartData" [legend]="false" [labels]="true" [doughnut]="true" [arcWidth]="0.2" [view]="[400, 400]">
+        </ngx-charts-pie-chart>
+        <div class="custom-legend">
+            <h4 class="legend-title">Service Call Statistics</h4>
+            <div *ngFor="let entry of usageChartData" class="legend-item">
+                <span class="legend-color" [style.backgroundColor]="entry.color" title="Color"></span>
+                <span class="legend-label">{{ entry.name }}:</span>
+                <span class="legend-value">{{ entry.value | number }} calls</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue Pie Chart with Titles and Enhanced Legends -->
+    <div style="text-align: center; flex: 1; padding: 20px; max-width: 500px;">
+        <h3 class="chart-title">Revenue Statistics</h3>
+        <ngx-charts-pie-chart [scheme]="colorScheme" [results]="revenueChartData" [legend]="false" [labels]="true" [doughnut]="true" [arcWidth]="0.2" [view]="[400, 400]">
+        </ngx-charts-pie-chart>
+        <div class="custom-legend">
+            <h4 class="legend-title">Revenue by Service</h4>
+            <div *ngFor="let entry of revenueChartData" class="legend-item">
+                <span class="legend-color" [style.backgroundColor]="entry.color" title="Color"></span>
+                <span class="legend-label">{{ entry.name }}:</span>
+                <span class="legend-value">${{ entry.value | number:'1.2-2' }} earned</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,10 +40,20 @@ public class GroupService {
         GroupsResource groupsResource = keycloakConfig.getInstance()
                 .realm(KeycloakConfig.realm)
                 .groups();
-        groupsResource.add(groupRep);
+        Response response = groupsResource.add(groupRep);
+
+        // After adding the group, retrieve the group representation to get the Keycloak ID
+        if (response.getStatus() == 201) {  // Status 201 indicates successful creation
+            String createdGroupId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
+            savedGroup.setKeycloakId(createdGroupId);
+            groupRepository.save(savedGroup);
+        } else {
+            throw new RuntimeException("Failed to create group in Keycloak");
+        }
 
         return savedGroup;
     }
+
 
     @Transactional
     public Group updateGroup(Long groupId, Group groupDetails) {

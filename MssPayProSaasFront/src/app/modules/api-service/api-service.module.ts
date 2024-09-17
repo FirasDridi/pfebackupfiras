@@ -23,6 +23,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AdmindashComponent } from '../../ad-dash/admindash/admindash.component';
 import { DeleteConfirmationDialog } from './add-api/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,7 @@ import { DeleteConfirmationDialog } from './add-api/delete-confirmation-dialog/d
     MatProgressSpinnerModule,
     MatSelectModule,
     MatOptionModule,
-    HttpClientModule,
+    HttpClientModule,MatSlideToggleModule
   ],
   exports: [
     CommonModule,

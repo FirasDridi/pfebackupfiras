@@ -13,19 +13,23 @@ import { AllServicesComponent } from './modules/user-dashboard/all-services/all-
 
 const routes: Routes = [
   { path: 'admins', loadChildren: () => import('./ad-dash/ad-dash.module').then(m => m.AdDashModule) },
-  { path: 'user', component: LayoutComponent, canActivate: [AuthGuard], children: [
-    { path: 'user-dashboard', component: UserDashboardComponent },
-    { path: 'profile', component: UserProfileComponent },
-    { path: 'services', component: UserServicesComponent },
-    { path: 'all-services', component: AllServicesComponent },
-    { path: '', redirectTo: 'all-services', pathMatch: 'full' },
-  ]},
+  {
+    path: 'user',
+    component: LayoutComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'user-dashboard', component: UserDashboardComponent },
+      { path: 'profile', component: UserProfileComponent },
+      { path: 'services', component: UserServicesComponent },
+      { path: 'all-services', component: AllServicesComponent },  // This will be protected by a superuser check in the component
+      { path: '', redirectTo: 'services', pathMatch: 'full' },  // Redirect to services for normal users
+    ],
+  },
   { path: 'access-denied', component: AccessDeniedComponent },
-  { path: 'my-account', component: MyAccountComponent, canActivate: [AuthGuard] },
   { path: 'user/:userId/invoices', component: UserInvoicesComponent, canActivate: [AuthGuard] },
   { path: 'group/:groupId/invoices', component: GroupInvoicesComponent, canActivate: [AuthGuard] },
-  { path: '', redirectTo: 'user/all-services', pathMatch: 'full' },
-  { path: '**', redirectTo: 'user/all-services' },
+  { path: '', redirectTo: 'user/services', pathMatch: 'full' },  // Redirect to services as the root route for normal users
+  { path: '**', redirectTo: 'user/services' },  // Redirect any unknown routes to services
 ];
 
 @NgModule({

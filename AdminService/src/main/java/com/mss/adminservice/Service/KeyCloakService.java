@@ -29,6 +29,8 @@ import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 // Other imports
 
@@ -327,5 +329,35 @@ public class KeyCloakService {
         }
     }
 
+    public UserDTO getUserDetailsFromKeycloak(String userId) {
+        UsersResource usersResource = KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
+        UserRepresentation userRepresentation = usersResource.get(userId).toRepresentation();
+
+        // Find the local user by keycloakId
+        Optional<User> userOptional = userRepository.findByKeycloakId(userId);
+        if (!userOptional.isPresent()) {
+            throw new RuntimeException("User not found in local database with Keycloak ID: " + userId);
+        }
+        User user = userOptional.get();
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());  // Use the local Long ID
+        userDTO.setUserName(userRepresentation.getUsername());
+        userDTO.setEmail(userRepresentation.getEmail());
+        userDTO.setFirstname(userRepresentation.getFirstName());
+        userDTO.setLastName(userRepresentation.getLastName());
+
+        // Fetch roles
+        Set<String> roles = getUserRolesFromKeycloak(userId);
+        userDTO.setRoles(roles);
+
+        return userDTO;
+    }
+
+    public Set<String> getUserRolesFromKeycloak(String userId) {
+        UsersResource usersResource = KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
+        List<RoleRepresentation> roles = usersResource.get(userId).roles().realmLevel().listEffective();
+        return roles.stream().map(RoleRepresentation::getName).collect(Collectors.toSet());
+    }
 
 }

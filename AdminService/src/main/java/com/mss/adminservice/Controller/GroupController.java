@@ -3,6 +3,7 @@ package com.mss.adminservice.Controller;
 import com.mss.adminservice.Config.UserGroupDTO;
 import com.mss.adminservice.Entities.Group;
 import com.mss.adminservice.Entities.User;
+import com.mss.adminservice.Repo.GroupRepository;
 import com.mss.adminservice.Repo.UserRepository;
 import com.mss.adminservice.Service.GroupService;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -23,6 +25,7 @@ public class GroupController {
 
     private final GroupService groupService;
     private final UserRepository userRepository;
+    private  final GroupRepository groupRepository ;
 
     @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Group> addGroup(@RequestBody UserGroupDTO group) {
@@ -99,5 +102,20 @@ public class GroupController {
     public ResponseEntity<Boolean> doesUserHaveService(@PathVariable Long userId, @PathVariable String serviceName) {
         boolean exists = userRepository.existsByIdAndServicesContaining(userId, serviceName);
         return ResponseEntity.ok(exists);
+    }
+
+    @GetMapping("/{groupId}/service-access/{serviceAccessToken}")
+    public ResponseEntity<Boolean> checkServiceAccess(@PathVariable Long groupId, @PathVariable String serviceAccessToken) {
+        // Fetch the group by ID
+        Optional<Group> groupOptional = groupRepository.findById(groupId);
+        if (groupOptional.isPresent()) {
+            Group group = groupOptional.get();
+            // Check if the serviceAccessToken exists in the group's accessTokens map
+            boolean hasAccess = group.getAccessTokens().containsValue(serviceAccessToken);
+            return ResponseEntity.ok(hasAccess);
+        } else {
+            // Group not found
+            return ResponseEntity.notFound().build();
+        }
     }
 }

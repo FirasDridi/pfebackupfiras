@@ -1,6 +1,9 @@
 package com.mss.demo.controller;
 
+import com.mss.demo.entity.Invoice;
+import com.mss.demo.entity.dto.AccessLogDTO;
 import com.mss.demo.entity.dto.InvoiceDetailDTO;
+import com.mss.demo.repository.InvoiceRepository;
 import com.mss.demo.service.BillingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +20,17 @@ public class BillingController {
 
     @Autowired
     private BillingService billingService;
-
+    @Autowired
+    private InvoiceRepository invoiceRepository;
     @GetMapping("/user/{userId}/invoices")
-    public List<InvoiceDetailDTO> getUserInvoices(@PathVariable Long userId) {
-        return billingService.getUserInvoices(String.valueOf(userId));
+        public List<InvoiceDetailDTO> getUserInvoices(@PathVariable String userId) {
+        return billingService.getUserInvoices(userId);
     }
 
     @GetMapping("/group/{groupId}/invoices")
     public List<InvoiceDetailDTO> getGroupInvoices(@PathVariable Long groupId) {
         return billingService.getGroupInvoices(groupId);
     }
-
-    // BillingController.java
 
     @GetMapping("/user/{userId}/total")
     public ResponseEntity<Double> getTotalAmountForUser(@PathVariable String userId) {
@@ -41,12 +43,10 @@ public class BillingController {
         }
     }
 
-
-
-
     @GetMapping("/group/{groupId}/total")
-    public double getTotalAmountForGroup(@PathVariable Long groupId) {
-        return billingService.getTotalAmountForGroup(groupId);
+    public ResponseEntity<Double> getTotalAmountForGroup(@PathVariable Long groupId) {
+        double totalAmount = billingService.getTotalAmountForGroup(groupId);
+        return ResponseEntity.ok(totalAmount);
     }
 
     @GetMapping("/all-invoices")
@@ -64,5 +64,35 @@ public class BillingController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(503).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/generate/user")
+    public ResponseEntity<String> generateUserInvoices() {
+        try {
+            List<AccessLogDTO> accessLogs = billingService.fetchAccessLogs();
+            billingService.generateUserInvoices(accessLogs);
+            return ResponseEntity.ok("User invoices generated successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(503).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/generate/group")
+    public ResponseEntity<String> generateGroupInvoices() {
+        try {
+            List<AccessLogDTO> accessLogs = billingService.fetchAccessLogs();
+            billingService.generateGroupInvoices(accessLogs);
+            return ResponseEntity.ok("Group invoices generated successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(503).body(e.getMessage());
+        }
+    }
+    @GetMapping("/service/{serviceId}/invoices")
+    public ResponseEntity<List<Invoice>> getInvoicesByServiceId(@PathVariable UUID serviceId) {
+        List<Invoice> invoices = invoiceRepository.findByServiceId(serviceId);
+        if (invoices.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(invoices);
     }
 }

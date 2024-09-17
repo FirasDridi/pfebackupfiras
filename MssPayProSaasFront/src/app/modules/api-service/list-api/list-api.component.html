@@ -1,74 +1,99 @@
-<div class="example-container mat-elevation-z8">
-    <div class="header-container">
-        <div class="add-api-button">
-            <button mat-raised-button color="primary" (click)="openAddApiDialog()">Add API</button>
-        </div>
+<div class="header-container">
+    <div class="add-api-button">
+        <button mat-raised-button color="primary" (click)="openAddApiDialog()">
+          <mat-icon>add</mat-icon> Add API
+      </button>
+    </div>
 
-        <div class="search-container">
-            <mat-form-field appearance="outline" class="search-field">
-                <mat-label>Search</mat-label>
-                <input matInput (keyup)="applyFilter($event)" placeholder="Search APIs">
-            </mat-form-field>
-        </div>
+    <div class="search-container">
+        <mat-form-field appearance="outline" class="search-field">
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search APIs">
+            <button mat-icon-button matSuffix *ngIf="searchQuery" (click)="clearSearch()">
+              <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
     </div>
-    <div *ngIf="dataSource?.data?.length === 0 && !dataSource?.paginator && !dataSource?.sort" class="loading-message">
-        Loading...
-    </div>
-    <table mat-table [dataSource]="dataSource" matSort class="mat-table custom-mat-table">
-        <ng-container matColumnDef="createdDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell">Created Date</th>
-            <td mat-cell *matCellDef="let service" class="mat-cell">{{ service.createdDate | date: "M/d/yy, h:mm:ss" }}</td>
-        </ng-container>
-        <ng-container matColumnDef="lastModifiedDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell">Last Modified Date</th>
-            <td mat-cell *matCellDef="let service" class="mat-cell">{{ service.lastModifiedDate | date: "M/d/yy, h:mm:ss" }}</td>
-        </ng-container>
-        <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell">Name</th>
-            <td mat-cell *matCellDef="let service" class="mat-cell">{{ service.name }}</td>
-        </ng-container>
-        <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell">Description</th>
-            <td mat-cell *matCellDef="let service" class="mat-cell">{{ service.description }}</td>
-        </ng-container>
-        <ng-container matColumnDef="pricing">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell">Pricing</th>
-            <td mat-cell *matCellDef="let service" class="mat-cell">{{ service.pricing | number:'1.2-2' }}</td>
-        </ng-container>
-        <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell">Status</th>
-            <td mat-cell *matCellDef="let service" class="mat-cell">
-                <mat-checkbox [checked]="service.status" (change)="toggleServiceStatus($event.checked, service)">
-                    {{ service.status ? "Active" : "Inactive" }}
-                </mat-checkbox>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="edit">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let service">
-                <button mat-icon-button color="primary" (click)="editService(service)">
+</div>
+
+
+<div *ngIf="dataSource?.data?.length === 0 && !dataSource?.paginator && !dataSource?.sort" class="loading-message">
+    Loading...
+</div>
+
+<table mat-table [dataSource]="dataSource" matSort class="mat-table custom-mat-table">
+    <ng-container matColumnDef="createdDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell created-date">
+            <mat-icon>calendar_today</mat-icon> Created Date
+        </th>
+        <td mat-cell *matCellDef="let service" class="mat-cell">{{ service.createdDate | date: "M/d/yy, h:mm:ss" }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="lastModifiedDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell last-modified">
+            <mat-icon>update</mat-icon> Last Modified
+        </th>
+        <td mat-cell *matCellDef="let service" class="mat-cell">{{ service.lastModifiedDate | date: "M/d/yy, h:mm:ss" }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell name">
+            <mat-icon>label</mat-icon> Name
+        </th>
+        <td mat-cell *matCellDef="let service" class="mat-cell">{{ service.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell description">
+            <mat-icon>description</mat-icon> Description
+        </th>
+        <td mat-cell *matCellDef="let service" class="mat-cell">{{ service.description }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="pricing">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell pricing">
+            <mat-icon>attach_money</mat-icon> Pricing
+        </th>
+        <td mat-cell *matCellDef="let service" class="mat-cell">{{ service.pricing | currency }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell status">
+            <mat-icon>toggle_on</mat-icon> Status
+        </th>
+        <td mat-cell *matCellDef="let service" class="mat-cell">
+            <mat-slide-toggle [checked]="service.status" (change)="toggleServiceStatus($event.checked, service)">
+                {{ service.status ? "Active" : "Inactive" }}
+            </mat-slide-toggle>
+        </td>
+    </ng-container>
+
+    <!-- Consolidated Actions Column -->
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell custom-header-cell actions">
+            <mat-icon>build</mat-icon> Actions
+        </th>
+        <td mat-cell *matCellDef="let service" class="mat-cell">
+            <button mat-icon-button color="primary" (click)="editService(service)">
                   <mat-icon>edit</mat-icon>
               </button>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let service">
-                <button mat-icon-button color="primary" (click)="openServiceDetails(service)">
+            <button mat-icon-button color="primary" (click)="openServiceDetails(service)">
                   <mat-icon>visibility</mat-icon>
               </button>
-                <button mat-icon-button color="warn" (click)="confirmDelete(service)">
+            <button mat-icon-button color="warn" (click)="confirmDelete(service)">
                   <mat-icon>delete</mat-icon>
               </button>
-            </td>
-        </ng-container>
+        </td>
+    </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let service; columns: displayedColumns"></tr>
-    </table>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let service; columns: displayedColumns"></tr>
+</table>
 
-    <div *ngIf="dataSource?.data?.length === 0 && searchQuery" class="no-results-message">
-        No results found for '{{ searchQuery }}'.
-    </div>
+<div class="paginator-container">
     <mat-paginator [length]="200" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page"></mat-paginator>
+</div>
+
+<div *ngIf="dataSource?.data?.length === 0 && searchQuery" class="no-results-message">
+    No results found for '{{ searchQuery }}'.
 </div>

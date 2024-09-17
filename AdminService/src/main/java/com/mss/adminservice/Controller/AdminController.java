@@ -355,7 +355,26 @@ public class AdminController {
         boolean exists = userRepository.existsByGroups_IdAndId(groupId, userId);
         return ResponseEntity.ok(exists);
     }
-
+    @GetMapping("/group-id-by-keycloak-id/{keycloakGroupId}")
+    public ResponseEntity<Long> getGroupIdByKeycloakGroupId(@PathVariable String keycloakGroupId) {
+        Group group = groupRepository.findByKeycloakId(keycloakGroupId)
+                .orElseThrow(() -> new RuntimeException("Group not found with Keycloak ID: " + keycloakGroupId));
+        return ResponseEntity.ok(group.getId());
+    }
+    // API to get the group ID by group name
+    @GetMapping("/group-id-by-keycloak-name/{groupName}")
+    public ResponseEntity<Long> getGroupIdByGroupName(@PathVariable String groupName) {
+        Long groupId = groupRepository.findGroupIdByGroupName(groupName);
+        if (groupId != null) {
+            return ResponseEntity.ok(groupId);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/keycloak/user/{userId}")
+    public UserDTO getUserDetailsFromKeycloak(@PathVariable String userId) {
+        return kc.getUserDetailsFromKeycloak(userId);
+    }
     @Payant
     @PostMapping("/firastest")
     public ResponseEntity<String> ttc() {

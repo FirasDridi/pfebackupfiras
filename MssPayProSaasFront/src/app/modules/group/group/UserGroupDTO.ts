@@ -10,4 +10,5 @@ export class UserGroupDTO {
   groupName?: string;
   description?: string;
   name?: string;  // Add this line
+  roles: any;
 }

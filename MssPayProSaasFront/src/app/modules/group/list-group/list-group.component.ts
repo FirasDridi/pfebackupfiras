@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { KeycloakService } from '../../keycloak/keycloak.service';
 import { HttpClient } from '@angular/common/http';
 import { GroupInvoicesComponent } from '../../facture/group-invoices/group-invoices.component';
+import { FactureService } from '../../facture/facture.service'; // Import FactureService
 
 @Component({
   selector: 'app-list-group',
@@ -19,9 +20,11 @@ export class ListGroupComponent implements OnInit {
   groupServices: any[] = [];
   displayedColumns: string[] = ['name', 'actions'];
   isAdmin = false;
+  totalGroups = 0;
 
   constructor(
     private groupService: GroupService,
+    private factureService: FactureService, // Inject FactureService
     private router: Router,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -31,13 +34,24 @@ export class ListGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAdmin = this.keycloakService.hasRole('admin');
+    this.generateInvoicesOnPageLoad(); // Generate invoices when the page loads
     this.loadGroups();
+  }
+
+  generateInvoicesOnPageLoad(): void {
+    this.factureService.generateInvoices().subscribe({
+      next: () => {
+        console.log('Invoices generated successfully on page load');
+      },
+     
+    });
   }
 
   loadGroups(): void {
     this.groupService.getAllGroups().subscribe(
       (groups) => {
         this.groups = groups;
+        this.totalGroups = groups.length;  // Initialize totalGroups with the length of groups
       },
       (error) => {
         console.error('Error fetching groups:', error);

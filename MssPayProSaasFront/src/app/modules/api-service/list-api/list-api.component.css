@@ -1,61 +1,80 @@
-.example-container {
-    margin: 20px;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+/* Ensure the layout takes full height */
 
-.header-container {
+.layout-content {
     display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
 }
 
-.add-api-button {
-    margin-bottom: 10px;
-}
 
-.search-container {
-    display: flex;
-    align-items: center;
-}
-
-.loading-message,
-.no-results-message {
-    text-align: center;
-    font-size: 1.2rem;
-    margin-top: 20px;
-}
+/* Table styling to expand and fill available space */
 
 .mat-table {
     width: 100%;
     border-collapse: collapse;
+    flex-grow: 1;
+    margin-bottom: 100px;
+    /* Increased space between the table and the paginator */
 }
 
-.mat-cell,
-.mat-header-cell {
+.mat-header-cell,
+.mat-cell {
     padding: 8px 16px;
 }
 
-.custom-header-cell {
-    background-color: #f5f5f5;
-    color: #000;
-    font-weight: bold;
+
+/* Specific header cell styles */
+
+.custom-header-cell.created-date {
+    background-color: #e0f7fa;
+    color: #00796b;
 }
 
-.search-field {
-    width: 300px;
+.custom-header-cell.last-modified {
+    background-color: #ffe0b2;
+    color: #e65100;
 }
 
-.mat-header-cell.mat-sort-header {
-    color: #000;
+.custom-header-cell.name {
+    background-color: #d1c4e9;
+    color: #4a148c;
 }
 
-.mat-header-cell.mat-sort-header.mat-sort-header-sorted {
-    color: #000;
+.custom-header-cell.description {
+    background-color: #c8e6c9;
+    color: #2e7d32;
 }
+
+.custom-header-cell.pricing {
+    background-color: #ffcdd2;
+    color: #c62828;
+}
+
+.custom-header-cell.status {
+    background-color: #fff9c4;
+    color: #f9a825;
+}
+
+.custom-header-cell.actions {
+    background-color: #ffcc80;
+    color: #e65100;
+}
+
+
+/* Alternating row colors */
+
+.mat-row:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.mat-cell {
+    text-align: left;
+    font-size: 14px;
+}
+
+
+/* Button styling */
 
 button.mat-icon-button {
     margin-right: 8px;
@@ -73,10 +92,105 @@ button.mat-icon-button.color-primary mat-icon {
     color: #1e88e5;
 }
 
+
+/* Form field and paginator styling */
+
 .mat-form-field {
     width: 100%;
 }
 
 .mat-select {
     min-width: 200px;
+}
+
+
+/* Position the paginator at the bottom */
+
+.paginator-container {
+    display: flex;
+    justify-content: center;
+    background-color: #f9f9f9;
+    padding: 10px 0;
+    margin-top: auto;
+    margin-bottom: 50px;
+    /* Added margin at the bottom for even more spacing */
+}
+
+
+/* Ensure the table has enough space above the paginator */
+
+.no-results-message {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+
+/* Additional layout adjustments */
+
+.mat-sidenav-container {
+    padding: 0;
+    /* Remove padding/margin around the sidenav container */
+}
+
+.mat-sidenav-content {
+    padding: 0;
+    /* Remove padding/margin around the content area */
+}
+
+
+/* Header container and buttons */
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.add-api-button {
+    margin-bottom: 10px;
+    margin-right: 15px;
+}
+
+.add-api-button button:hover {
+    background-color: #0055a5;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.mat-form-field.search-field {
+    width: 100%;
+    max-width: 400px;
+    margin-left: auto;
+    background-color: #ffffff;
+    border-radius: 25px;
+    padding-left: 10px;
+    padding-right: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.mat-form-field.search-field input {
+    padding-left: 5px;
+}
+
+.mat-form-field.search-field .mat-icon {
+    color: #757575;
+}
+
+.mat-form-field.search-field .mat-icon-button {
+    margin-right: 8px;
+}
+
+.mat-form-field.search-field .mat-icon-button mat-icon {
+    color: #757575;
+}
+
+.mat-form-field.search-field:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

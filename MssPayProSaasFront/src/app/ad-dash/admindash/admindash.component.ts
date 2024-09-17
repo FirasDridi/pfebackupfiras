@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,7 +18,7 @@ import { Notification } from './notifactionRequest/notifications/notifications/n
   templateUrl: './admindash.component.html',
   styleUrls: ['./admindash.component.css'],
 })
-export class AdmindashComponent implements OnInit {
+export class AdmindashComponent implements OnInit, OnDestroy {
   serviceForm!: FormGroup;
   title = 'MssPayProSaas';
   isMobile = true;
@@ -34,6 +34,7 @@ export class AdmindashComponent implements OnInit {
   isLoading = false;
   successMessage: string | null = null;
   successIcon: string | null = null;
+  notificationInterval: any;
 
   constructor(
     private http: HttpClient,
@@ -61,9 +62,20 @@ export class AdmindashComponent implements OnInit {
         this.setMenuItems();
         this.loadNotificationsAndRequests();
         this.router.navigate(['/admins/list']);
+
+        // Reload notifications every 5 seconds
+        this.notificationInterval = setInterval(() => {
+          this.loadNotificationsAndRequests();
+        }, 5000);
       });
     } else {
       this.login();
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.notificationInterval) {
+      clearInterval(this.notificationInterval);
     }
   }
 
@@ -71,12 +83,9 @@ export class AdmindashComponent implements OnInit {
     this.menuItems = [
       { title: 'Users', icon: 'people', path: '/admins/userlist' },
       { title: 'Clients', icon: 'group', path: '/admins/groups' },
-      {
-        title: 'Add Client',
-        icon: 'group_add',
-        path: '/admins/group/add-group',
-      },
+      { title: 'Add Client', icon: 'group_add', path: '/admins/group/add-group' },
       { title: 'APIs', icon: 'api', path: '/admins/list' },
+      { title: 'Statistics', icon: 'bar_chart', path: '/admins/statistics' } // New menu item
     ];
   }
 
@@ -163,10 +172,10 @@ export class AdmindashComponent implements OnInit {
       });
     });
   }
-// Method in your service class to approve request
-approveRequest(notificationId: number): void {
-  this.isLoading = true;
-  this.adminService.approveRequest(notificationId).subscribe(() => {
+
+  approveRequest(notificationId: number): void {
+    this.isLoading = true;
+    this.adminService.approveRequest(notificationId).subscribe(() => {
       this.notifications = this.notifications.filter(n => n.id !== notificationId);
       this.unreadCount = this.notifications.length;
       this.isLoading = false;
@@ -174,15 +183,14 @@ approveRequest(notificationId: number): void {
       this.successIcon = "check_circle";
       this.showSnackBar(this.successMessage, this.successIcon);
       setTimeout(() => this.loadNotificationsAndRequests(), 3000);
-  }, error => {
+    }, error => {
       console.error('Error approving request:', error);
       this.isLoading = false;
       this.successMessage = "Failed to approve request";
       this.successIcon = "error";
       this.showSnackBar(this.successMessage, this.successIcon);
-  });
-}
-
+    });
+  }
 
   rejectRequest(notificationId: number): void {
     this.isLoading = true;

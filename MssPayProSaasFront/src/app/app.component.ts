@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
       if (this.keycloakService.hasRole('admin')) {
         this.router.navigate(['/admins/groups']);
       } else {
-        this.router.navigate(['/user/all-services']); // Ensure it navigates to /user/all-services
+        this.router.navigate(['/user/profile']); // Ensure it navigates to /user/all-services
       }
     }
   }

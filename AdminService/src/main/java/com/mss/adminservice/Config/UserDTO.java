@@ -4,6 +4,8 @@ import com.mss.adminservice.Entities.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 public class UserDTO {
@@ -14,6 +16,7 @@ public class UserDTO {
     private String email;
     private String password;
     private String keycloakId; // Add this line
+    private Set<String> roles;  // Add this field to store roles
 
     public UserDTO(User user) {
         this.id = user.getId();

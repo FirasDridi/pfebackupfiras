@@ -2,9 +2,7 @@ package com.mss.servicemanager.Controller;
 
 import com.mss.base.controller.*;
 import com.mss.base.controller.impl.BaseControlerImpl;
-import com.mss.servicemanager.DTO.GroupDto;
-import com.mss.servicemanager.DTO.ServiceDetailsDto;
-import com.mss.servicemanager.DTO.ServiceDto;
+import com.mss.servicemanager.DTO.*;
 import com.mss.servicemanager.Repositories.ServiceUsageRepo;
 import com.mss.servicemanager.Services.ServiceUsageService;
 import com.mss.servicemanager.entities.service;
@@ -23,6 +21,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RestController
@@ -174,7 +173,11 @@ public class ServiceUsageController extends BaseControlerImpl<service, UUID, Ser
         return ResponseEntity.ok("firas");
     }
 
-
+    @Payant
+    @PostMapping("/firastestt")
+    public ResponseEntity<String> tttc() {
+        return ResponseEntity.ok("firas");
+    }
     @GetMapping("/access-token")
     public ResponseEntity<String> getServiceAccessTokenByEndpoint(@RequestParam String endpoint) {
         Optional<service> serviceOptional = serviceRepository.findByEndpoint(endpoint);
@@ -193,5 +196,70 @@ public class ServiceUsageController extends BaseControlerImpl<service, UUID, Ser
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/{serviceId}/invoices")
+    public ResponseEntity<List<InvoiceDetailsDto>> getInvoicesByServiceId(@PathVariable UUID serviceId) {
+        List<InvoiceDetailsDto> invoiceDetails = fetchInvoices(serviceId);
+
+        if (invoiceDetails == null || invoiceDetails.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Add logic to fetch userName and groupName if required
+        invoiceDetails.forEach(invoice -> {
+            invoice.setUserName(fetchUserName(invoice.getUserId()));
+            invoice.setGroupName(fetchGroupName(invoice.getGroupId()));
+        });
+
+        return ResponseEntity.ok(invoiceDetails);
+    }
+
+    private List<InvoiceDetailsDto> fetchInvoices(UUID serviceId) {
+        return webClientBuilder.build()
+                .get()
+                .uri("http://localhost:8084/billing/service/" + serviceId + "/invoices")
+                .retrieve()
+                .bodyToFlux(InvoiceDetailsDto.class)
+                .collectList()
+                .block();
+    }
+
+    private String fetchUserName(UUID userId) {
+        UserDto userDto = webClientBuilder.build()
+                .get()
+                .uri("http://localhost:8884/admin/getUser/" + userId)
+                .retrieve()
+                .bodyToMono(UserDto.class)
+                .block();
+
+        // Log the userDto to ensure it's correctly populated
+        System.out.println(userDto);
+
+        return userDto != null ? userDto.getUsername() : null;
+    }
+
+
+
+
+    private String fetchGroupName(Long groupId) {
+        GroupDto group = webClientBuilder.build()
+                .get()
+                .uri("http://localhost:8884/api/v1/groups/details/" + groupId)
+                .retrieve()
+                .bodyToMono(GroupDto.class)
+                .block();
+        return group != null ? group.getName() : null;
+    }
+    @GetMapping("/service-name-by-token")
+    public ResponseEntity<String> getServiceNameByAccessToken(@RequestParam String accessToken) {
+        Optional<service> serviceOptional = serviceRepository.findByAccessToken(accessToken);
+        if (serviceOptional.isPresent()) {
+            String serviceName = serviceOptional.get().getName();
+            return ResponseEntity.ok(serviceName);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Service not found for the given access token");
+        }
+    }
 
 }
+
+

@@ -8,10 +8,10 @@ import { FactureService } from '../facture.service';
   styleUrls: ['./user-invoices.component.css']
 })
 export class UserInvoicesComponent implements OnInit {
-  userId!: number;
+  userId!: string; // This should now be the Keycloak ID
   invoices: any[] = [];
   totalAmount!: number;
-  displayedColumns: string[] = ['id', 'serviceId', 'serviceName', 'timestamp', 'amount'];
+  displayedColumns: string[] = ['serviceName', 'timestamp', 'amount'];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -19,24 +19,31 @@ export class UserInvoicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userId = parseInt(this.data.userId, 10);
-    if (isNaN(this.userId)) {
+    this.userId = this.data.userId; // Ensure this is the Keycloak ID
+    if (!this.userId) {
       console.error('Invalid User ID:', this.data.userId);
     } else {
       console.log('User ID:', this.userId);
-      this.generateAndLoadInvoices();
+      this.generateInvoices();
+      this.loadInvoices();
+      this.loadTotalAmount();
     }
   }
 
-  generateAndLoadInvoices(): void {
-    this.factureService.generateInvoices().subscribe(() => {
-      this.loadInvoices();
-      this.loadTotalAmount();
+  generateInvoices(): void {
+    console.log('Generating invoices for user ID:', this.userId);
+    this.factureService.generateInvoices().subscribe({
+      next: () => {
+        console.log('Invoices generated successfully');
+      },
+      error: (error) => {
+        console.error('Error generating invoices:', error);
+      }
     });
   }
 
   loadInvoices(): void {
-    console.log('Loading invoices for user ID:', this.userId);
+    console.log('Loading invoices for user ID (Keycloak ID):', this.userId);
     this.factureService.getUserInvoices(this.userId).subscribe((data) => {
       this.invoices = data;
       console.log('Invoices:', this.invoices);
@@ -44,7 +51,7 @@ export class UserInvoicesComponent implements OnInit {
   }
 
   loadTotalAmount(): void {
-    console.log('Loading total amount for user ID:', this.userId);
+    console.log('Loading total amount for user ID (Keycloak ID):', this.userId);
     this.factureService.getUserTotal(this.userId).subscribe((total) => {
       this.totalAmount = total;
       console.log('Total Amount:', this.totalAmount);

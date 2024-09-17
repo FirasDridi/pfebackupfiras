@@ -1,22 +1,3 @@
-<mat-toolbar color="primary" class="custom-toolbar">
-    <span>{{ title }}</span>
-    <span class="spacer"></span>
-    <button mat-button (click)="login()" *ngIf="!isLoggedIn">Login</button>
-    <ng-container *ngIf="isLoggedIn">
-        <button mat-button [matMenuTriggerFor]="menu">Admin</button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="accountManagement()">
-              <mat-icon>account_circle</mat-icon>
-              <span>Profile</span>
-          </button>
-            <button mat-menu-item (click)="logout()">
-              <mat-icon>logout</mat-icon>
-              <span>Logout</span>
-          </button>
-        </mat-menu>
-    </ng-container>
-</mat-toolbar>
-
 <mat-tab-group class="custom-tab-group" backgroundColor="primary" color="accent">
     <mat-tab *ngFor="let item of menuItems" [label]="item.label || ''">
         <ng-template mat-tab-label>
@@ -28,87 +9,70 @@
 </mat-tab-group>
 
 <div class="page-content">
-    <router-outlet></router-outlet>
-</div>
+    <h2 class="dashboard-title">
+        <mat-icon class="dashboard-icon">dashboard</mat-icon> User Dashboard
+    </h2>
 
-<!-- Add User button for superusers -->
-<div *ngIf="isSuperUser">
-    <ng-container *ngFor="let group of userGroups">
-        <button *ngIf="group.groupName" mat-raised-button color="primary" (click)="toggleAddUserForm(group.groupName!)">
-          <mat-icon>person_add</mat-icon> Add Users to {{ group.groupName }}
+    <!-- Add User button for superusers -->
+    <div *ngIf="isSuperUser" class="add-user-section">
+        <button mat-raised-button color="primary" (click)="openAddUserDialog()">
+        <mat-icon>person_add</mat-icon> Add User
       </button>
+    </div>
 
-        <!-- Add User Form -->
-        <div *ngIf="selectedGroup === group.groupName">
-            <form [formGroup]="addUserForm" (ngSubmit)="onSubmit(group.groupName!)">
-                <mat-form-field appearance="fill">
-                    <mat-label>Client Name</mat-label>
-                    <input matInput formControlName="groupName" readonly>
-                </mat-form-field>
+    <!-- User table section -->
+    <div class="user-table-section" *ngIf="selectedGroupId && usersInGroups[selectedGroupId]?.length">
+        <mat-card class="user-table-card">
+            <table mat-table [dataSource]="usersInGroups[selectedGroupId]" class="mat-elevation-z8">
 
-                <mat-form-field appearance="fill">
-                    <mat-label>First Name</mat-label>
-                    <input matInput formControlName="firstName">
-                </mat-form-field>
+                <!-- Username Column -->
+                <ng-container matColumnDef="username">
+                    <th mat-header-cell *matHeaderCellDef> Username </th>
+                    <td mat-cell *matCellDef="let user">
+                        <mat-icon>person</mat-icon> {{ user.username }}
+                        <span *ngIf="user.isSuperUser" class="superuser-badge">
+                        <mat-icon>verified</mat-icon> Superuser
+                      </span>
+                    </td>
+                </ng-container>
 
-                <mat-form-field appearance="fill">
-                    <mat-label>Last Name</mat-label>
-                    <input matInput formControlName="lastName">
-                </mat-form-field>
+                <!-- First Name Column -->
+                <ng-container matColumnDef="firstname">
+                    <th mat-header-cell *matHeaderCellDef> First Name </th>
+                    <td mat-cell *matCellDef="let user"> {{ user.firstname }} </td>
+                </ng-container>
 
-                <mat-form-field appearance="fill">
-                    <mat-label>Email</mat-label>
-                    <input matInput formControlName="email">
-                </mat-form-field>
+                <!-- Last Name Column -->
+                <ng-container matColumnDef="lastName">
+                    <th mat-header-cell *matHeaderCellDef> Last Name </th>
+                    <td mat-cell *matCellDef="let user"> {{ user.lastname }} </td>
+                </ng-container>
 
-                <mat-form-field appearance="fill">
-                    <mat-label>Password</mat-label>
-                    <input matInput type="password" formControlName="password">
-                </mat-form-field>
+                <!-- Email Column -->
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef> Email </th>
+                    <td mat-cell *matCellDef="let user"> {{ user.email }} </td>
+                </ng-container>
 
-                <button mat-raised-button color="primary" type="submit">Add User</button>
-            </form>
-        </div>
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef> Actions </th>
+                    <td mat-cell *matCellDef="let user">
+                        <button mat-icon-button (click)="viewUserInvoices(user.id)" matTooltip="View Invoices">
+                        <mat-icon>receipt_long</mat-icon>
+                      </button>
+                    </td>
+                </ng-container>
 
-        <h2>Users in {{ group.groupName }}</h2>
-        <table mat-table [dataSource]="usersInGroups[group.id!]" class="mat-elevation-z8">
-            <!-- Username Column -->
-            <ng-container matColumnDef="username">
-                <th mat-header-cell *matHeaderCellDef> Username </th>
-                <td mat-cell *matCellDef="let user"> {{ user.username }} </td>
-            </ng-container>
+                <!-- Header and Row Definitions -->
+                <tr mat-header-row *matHeaderRowDef="displayedUserColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedUserColumns;"></tr>
+            </table>
+        </mat-card>
+    </div>
 
-            <!-- First Name Column -->
-            <ng-container matColumnDef="firstname">
-                <th mat-header-cell *matHeaderCellDef> First Name </th>
-                <td mat-cell *matCellDef="let user"> {{ user.firstname }} </td>
-            </ng-container>
-
-            <!-- Last Name Column -->
-            <ng-container matColumnDef="lastname">
-                <th mat-header-cell *matHeaderCellDef> Last Name </th>
-                <td mat-cell *matCellDef="let user"> {{ user.lastname }} </td>
-            </ng-container>
-
-            <!-- Email Column -->
-            <ng-container matColumnDef="email">
-                <th mat-header-cell *matHeaderCellDef> Email </th>
-                <td mat-cell *matCellDef="let user"> {{ user.email }} </td>
-            </ng-container>
-
-            <!-- Actions Column -->
-            <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef> Actions </th>
-                <td mat-cell *matCellDef="let user">
-                    <button mat-icon-button (click)="viewUserInvoices(user.id)" matTooltip="View Invoices">
-                        <mat-icon class="custom-icon">receipt</mat-icon>
-                    </button>
-                    <!-- Placeholder for future actions -->
-                </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedUserColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedUserColumns;"></tr>
-        </table>
-    </ng-container>
+    <!-- Message when no users are available -->
+    <div *ngIf="selectedGroupId && !usersInGroups[selectedGroupId]?.length" class="no-users-message">
+        <p>No users available in this group.</p>
+    </div>
 </div>

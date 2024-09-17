@@ -11,7 +11,7 @@ export class GroupInvoicesComponent implements OnInit {
   groupId!: number;
   invoices: any[] = [];
   totalAmount!: number;
-  displayedColumns: string[] = ['userId', 'serviceName', 'timestamp', 'amount'];
+  displayedColumns: string[] = ['serviceName', 'timestamp', 'amount'];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -19,35 +19,26 @@ export class GroupInvoicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.groupId = parseInt(this.data.groupId, 10);
-    if (isNaN(this.groupId)) {
-      console.error('Invalid Group ID:', this.data.groupId);
-    } else {
-      console.log('Group ID:', this.groupId);
-      this.generateAndLoadInvoices();
-    }
-  }
-
-  generateAndLoadInvoices(): void {
-    this.factureService.generateInvoices().subscribe(() => {
-      this.loadInvoices();
-      this.loadTotalAmount();
-    });
+    this.groupId = Number(this.data.groupId);
+    this.loadInvoices();  // Load invoices after the dialog is opened
+    this.loadTotalAmount();  // Load total amount after the dialog is opened
   }
 
   loadInvoices(): void {
-    console.log('Loading invoices for group ID:', this.groupId);
     this.factureService.getGroupInvoices(this.groupId).subscribe((data) => {
       this.invoices = data;
       console.log('Invoices:', this.invoices);
+    }, (error) => {
+      console.error('Error fetching group invoices:', error);
     });
   }
 
   loadTotalAmount(): void {
-    console.log('Loading total amount for group ID:', this.groupId);
     this.factureService.getGroupTotal(this.groupId).subscribe((total) => {
       this.totalAmount = total;
       console.log('Total Amount:', this.totalAmount);
+    }, (error) => {
+      console.error('Error fetching total amount:', error);
     });
   }
 }

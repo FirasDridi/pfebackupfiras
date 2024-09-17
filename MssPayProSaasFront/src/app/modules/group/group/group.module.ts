@@ -15,6 +15,7 @@ import { MatListModule } from '@angular/material/list';
 import { ListGroupComponent } from '../list-group/list-group.component';
 import { AddGroupComponent } from '../add-group/add-group.component';
 import { EditGroupComponent } from '../edit-group/edit-group.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { EditGroupComponent } from '../edit-group/edit-group.component';
     MatDialogModule,
     MatSelectModule,
     MatSnackBarModule,
-    MatListModule
+    MatListModule,MatPaginatorModule
   ],
 })
 export class GroupModule { }

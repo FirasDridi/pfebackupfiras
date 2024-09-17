@@ -85,4 +85,8 @@ export class ServiceUsageService extends SimpleBaseController<
       }
     });
   }
+
+  getInvoicesByServiceId(serviceId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/${serviceId}/invoices`);
+  }
 }

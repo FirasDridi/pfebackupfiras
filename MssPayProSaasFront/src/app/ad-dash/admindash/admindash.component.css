@@ -1,64 +1,88 @@
-/* admindash.component.css */
+/* Ensure the toolbar has no margin or padding */
 
 .layout-topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: #00796B;
+    /* Primary theme color */
+    margin: 0;
+    padding: 0 16px;
 }
 
-.layout-topbar-right {
+
+/* Sidebar styles to ensure no gap with the top toolbar */
+
+.sidebar-content {
+    background-color: #00796B;
+    /* Primary theme color */
+    color: white;
+    height: 100vh;
+    /* Full height of the viewport */
+    padding: 0;
     display: flex;
-    align-items: center;
+    flex-direction: column;
 }
 
-.notification-card {
-    margin: 0.5em;
+
+/* Main content container with no padding or margin to merge with the sidebar */
+
+.mat-sidenav-container {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.mat-sidenav-content {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    /* Ensure full height to match the sidebar */
+}
+
+
+/* Sidebar menu items */
+
+.menu-item {
+    color: white !important;
+    /* Force white text color */
+    padding: 10px 15px;
+    border-radius: 4px;
+}
+
+.menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+/* Ensure that the sidenav occupies the full height and touches the top */
+
+.mat-sidenav {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+
+/* Remove any spacing around the main content area */
+
+.mat-sidenav-container {
+    margin: 0;
     padding: 0;
 }
 
-.notification-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.notification-time {
-    font-size: 0.8em;
-    color: gray;
-}
-
-.notification-body {
-    margin-top: 0.5em;
-}
-
-.notification-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.5em;
-}
-
-.notification-actions button {
-    margin-right: 0.5em;
+.mat-sidenav-content {
+    padding: 0;
+    margin: 0;
+    width: calc(100% - 240px);
+    /* Adjust width as per your sidebar width */
 }
 
 
-/* admindash.component.css */
+/* Specifically target the span and icons inside .menu-item to ensure the text and icons are white */
 
-.loading-spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.7);
-    z-index: 1000;
-}
-
-.snack-bar-success {
-    background-color: #4caf50;
-    color: white;
+.menu-item span,
+.menu-item mat-icon {
+    color: white !important;
+    /* Force white color on text and icons */
 }

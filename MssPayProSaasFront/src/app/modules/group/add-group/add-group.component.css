@@ -9,10 +9,25 @@
 }
 
 .title {
-    color: #20b2aa;
+    color: #009688;
     text-align: center;
     margin-bottom: 20px;
     font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title mat-icon {
+    margin-right: 10px;
+    color: #009688;
+    font-size: 28px;
+    vertical-align: middle;
+    transition: transform 0.3s;
+}
+
+.title mat-icon:hover {
+    transform: scale(1.1);
 }
 
 .client-form {
@@ -34,4 +49,22 @@
 button {
     width: 48%;
     font-size: 16px;
+}
+
+.mat-raised-button.mat-primary {
+    background-color: #009688;
+    color: white;
+}
+
+.mat-raised-button.mat-warn {
+    background-color: #e53935;
+    color: white;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline {
+    color: #009688;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    color: #009688;
 }

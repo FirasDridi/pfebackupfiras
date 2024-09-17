@@ -1,3 +1,4 @@
+
 package com.mss.adminservice.Repo;
 
 import com.mss.adminservice.Entities.Group;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
     Optional<Group> findByName(String name);
+    Optional<Group> findByKeycloakId(String keycloakId); // Change this line
 
     List<Group> findByNameContaining(String groupName);
 
@@ -24,4 +26,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     @Query("SELECT g FROM Group g JOIN g.accessTokens t WHERE VALUE(t) = :accessToken")
     Optional<Group> findByAccessTokenValue(@Param("accessToken") String accessToken);
+
+    @Query("SELECT g.id FROM Group g WHERE g.name = :groupName")
+    Long findGroupIdByGroupName(String groupName);
 }

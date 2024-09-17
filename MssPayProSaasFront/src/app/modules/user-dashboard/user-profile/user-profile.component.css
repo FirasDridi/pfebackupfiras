@@ -1,74 +1,78 @@
-/* user-profile-page.component.css */
-
-body {
-    font-family: 'Roboto', sans-serif;
-    color: #333;
-    background-color: #e9ecef;
-    margin: 0;
-    padding: 0;
-}
-
 .user-profile-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     padding: 20px;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
     margin: 40px auto;
-    border: 1px solid #dcdcdc;
+    border: 1px solid #e0e0e0;
 }
 
-.user-details,
-.user-groups {
-    width: 100%;
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #dcdcdc;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    /* Center align the text */
-}
-
-h3 {
+.profile-header {
     margin-bottom: 20px;
-    color: #20B2AA;
-    font-weight: 500;
+    color: #009688;
+    font-weight: 600;
     font-size: 24px;
     display: flex;
     align-items: center;
-    justify-content: center;
 }
 
-table {
+.profile-header mat-icon {
+    margin-right: 8px;
+    color: #009688;
+}
+
+.profile-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
-    text-align: center;
-    /* Center align the text */
 }
 
-th,
-td {
+.profile-table td,
+.profile-table th {
     padding: 10px;
-    text-align: center;
-    /* Center align the text */
-    border-bottom: 1px solid #dcdcdc;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
 }
 
-th {
+.profile-table th {
     background-color: #f5f5f5;
     color: #333;
-    font-weight: 500;
+    font-weight: 600;
+    text-align: left;
 }
 
-td {
+.profile-table td.label {
+    font-weight: bold;
+    width: 150px;
+    /* Adjust width for consistent alignment */
+}
+
+.profile-table td {
     color: #555;
+}
+
+.profile-table td:first-child {
+    width: 40px;
+    /* Set a fixed width for icons */
+}
+
+.profile-table td.mat-icon {
+    text-align: center;
+    color: #009688;
 }
 
 tr:last-child td {
     border-bottom: none;
+}
+
+.mat-primary {
+    background-color: #009688 !important;
+}
+
+.mat-accent {
+    background-color: #00796b !important;
+}
+
+.mat-warn {
+    background-color: #d32f2f !important;
 }

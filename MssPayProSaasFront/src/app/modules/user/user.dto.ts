@@ -9,7 +9,9 @@ export class UserDTO {
   password?: string;
   firstname?: string;
   lastName?: string;
+  keycloakId?: string;
   groups?: GroupDto[];
   firstName?: string;
 pictureUrl?: any;
+  roles: any;
 }

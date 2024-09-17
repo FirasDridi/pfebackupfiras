@@ -18,7 +18,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/services/firastest").authenticated() // Secure the specific endpoint
+                        .requestMatchers("/api/services/firastest").authenticated()
+                        .requestMatchers("/api/services/firastestt").authenticated() // Secure the specific endpoint
                         .anyRequest().permitAll() // Allow all other requests
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

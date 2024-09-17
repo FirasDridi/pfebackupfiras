@@ -22,8 +22,9 @@ const routes: Routes = [
     path: '',
     component: AdmindashComponent,
     children: [
+      { path: '', redirectTo: 'statistics', pathMatch: 'full' }, // Redirect to statistics by default
+      { path: 'statistics', loadChildren: () => import('../../modules/statistics/statistics.module').then(m => m.StatisticsModule) }, // Load the Statistics module
       { path: 'notifications', component: NotificationsComponent },
-      { path: '', component: AdmindashComponent },
       { path: 'userlist', component: ListUserComponent },
       { path: 'api/list', component: ApiDetailsComponentComponent },
       { path: 'groups', component: ListGroupComponent },

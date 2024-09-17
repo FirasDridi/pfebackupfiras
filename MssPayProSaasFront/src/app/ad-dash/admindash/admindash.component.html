@@ -61,11 +61,7 @@
 </div>
 
 <!-- Success message -->
-<mat-snack-bar-container>
-    <div *ngIf="successMessage">
-        <mat-icon>{{ successIcon }}</mat-icon> {{ successMessage }}
-    </div>
-</mat-snack-bar-container>
+
 
 <mat-sidenav-container class="layout-main">
     <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isCollapsed" (openedChange)="isCollapsed = !($event)">

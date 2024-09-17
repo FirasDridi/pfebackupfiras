@@ -28,21 +28,21 @@ public class RestClientService {
                 .block();
     }
 
-    public Long getGroupIdFromToken(String accessToken) {
+    public Long getGroupIdByKeycloakName(String keycloakGroupName) {
         return webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8884/admin/group-id-by-token/" + accessToken)
+                .uri("http://localhost:8884/admin/group-id-by-keycloak-name/" + keycloakGroupName) // Adjusted URI
                 .retrieve()
                 .bodyToMono(Long.class)
                 .block();
     }
 
-    public Long getUserIdFromToken(String accessToken) {
+    public boolean isGroupServiceAccessible(Long groupId, String serviceAccessToken) {
         return webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8884/admin/user-id-by-token/" + accessToken)
+                .uri("http://localhost:8884/api/v1/groups/" + groupId + "/service-access/" + serviceAccessToken)
                 .retrieve()
-                .bodyToMono(Long.class)
+                .bodyToMono(Boolean.class)
                 .block();
     }
 }

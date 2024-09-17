@@ -22,6 +22,7 @@ public class Invoice {
 
     @Column(name = "service_id", nullable = false)
     private UUID serviceId; // Change to UUID
+    private String serviceName; // Add this field to store the service name
 
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;

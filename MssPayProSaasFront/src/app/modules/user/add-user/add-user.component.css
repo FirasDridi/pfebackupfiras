@@ -1,0 +1,52 @@
+.add-user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+button {
+    width: 48%;
+    font-size: 16px;
+}
+
+.mat-form-field {
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+    background-color: #f4f4f4;
+}
+
+.mat-raised-button.mat-primary {
+    background-color: #009688;
+    color: white;
+}
+
+.mat-button {
+    color: #f44336;
+}
+
+.mat-label {
+    color: #009688;
+}
+
+button:hover {
+    opacity: 0.9;
+}

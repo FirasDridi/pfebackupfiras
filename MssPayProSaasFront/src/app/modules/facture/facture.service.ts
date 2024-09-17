@@ -6,15 +6,15 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class FactureService {
-  private apiUrl = 'http://localhost:8084/billing'; // Update the base URL as needed
+  private apiUrl = 'http://localhost:8084/billing'; // Adjust this as per your environment
 
   constructor(private http: HttpClient) {}
 
-  getUserInvoices(userId: number): Observable<any> {
+  getUserInvoices(userId: string): Observable<any> { // This should be the Keycloak ID
     return this.http.get(`${this.apiUrl}/user/${userId}/invoices`);
   }
 
-  getUserTotal(userId: number): Observable<number> {
+  getUserTotal(userId: string): Observable<number> { // This should be the Keycloak ID
     return this.http.get<number>(`${this.apiUrl}/user/${userId}/total`);
   }
 

@@ -1,20 +1,94 @@
-/* src/app/layout/layout.component.css */
+/* Toolbar Styling */
 
 .custom-toolbar {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    /* Center the navbar content */
     align-items: center;
+    padding: 0 20px;
+    background-color: #00796B;
+    /* Primary color */
+    color: #FFFFFF;
+    /* White text */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    /* Subtle shadow for depth */
 }
+
+
+/* Tab Group Styling */
 
 .custom-tab-group {
-    margin-top: 10px;
+    margin: 0;
+    background-color: #004D40;
+    /* Darker primary color */
+    border-bottom: 2px solid #004D40;
+    /* Darker shade for the border */
+    flex-grow: 1;
+    /* Allow the tabs to take up space */
 }
 
-.page-content {
-    padding: 20px;
-}
+
+/* Tab Section Styling */
 
 .tab-section-container {
     display: flex;
     align-items: center;
+    font-size: 16px;
+    color: #FFFFFF;
+    /* White text on tabs */
+    padding: 8px 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+.tab-section-container:hover {
+    background-color: #00796B;
+    /* Lighter primary color on hover */
+    color: #FFFFFF;
+    border-radius: 4px;
+}
+
+
+/* Icon Styling */
+
+.tab-section-container mat-icon {
+    margin-right: 8px;
+    font-size: 20px;
+}
+
+
+/* Page Content Styling */
+
+.page-content {
+    padding: 25px;
+    background-color: #FAFAFA;
+    /* Light grey background */
+    min-height: calc(100vh - 160px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+    border-radius: 8px;
+    margin-top: 20px;
+    /* Space between tabs and content */
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .custom-toolbar {
+        flex-direction: column;
+        align-items: center;
+        padding: 8px 16px;
+    }
+    .page-content {
+        padding: 16px;
+    }
+}
+
+.layout-topbar {
+    display: flex;
+    justify-content: center;
+    /* Center the entire navbar content */
+    align-items: center;
+    width: 100%;
 }

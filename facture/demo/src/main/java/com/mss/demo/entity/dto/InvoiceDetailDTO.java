@@ -11,8 +11,12 @@ public class InvoiceDetailDTO {
     private String serviceName;
     private LocalDateTime timestamp;
     private double amount;
+    private String userName;  // New field
+    private String groupName; // New field
 
-    public InvoiceDetailDTO(UUID id, UUID userId, Long groupId, String serviceId, String serviceName, LocalDateTime timestamp, double amount) {
+    // Constructor, Getters, and Setters
+
+    public InvoiceDetailDTO(UUID id, UUID userId, Long groupId, String serviceId, String serviceName, LocalDateTime timestamp, double amount, String groupName, String userName) {
         this.id = id;
         this.userId = userId;
         this.groupId = groupId;
@@ -20,7 +24,11 @@ public class InvoiceDetailDTO {
         this.serviceName = serviceName;
         this.timestamp = timestamp;
         this.amount = amount;
+        this.groupName = groupName;
+        this.userName = userName;
     }
+
+
 
     // Getters and setters
 
@@ -78,5 +86,21 @@ public class InvoiceDetailDTO {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

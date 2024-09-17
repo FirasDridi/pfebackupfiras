@@ -92,6 +92,7 @@ export function initializeKeycloak(keycloak: KeycloakService) {
     MatInputModule,
     MatSortModule,
     FactureModule,
+    
   ],
   providers: [
     {

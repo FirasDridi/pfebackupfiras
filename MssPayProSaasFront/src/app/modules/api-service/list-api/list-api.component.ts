@@ -30,12 +30,13 @@ export class ListApiComponent implements OnInit, AfterViewInit {
     'createdDate',
     'lastModifiedDate',
     'name',
-    'description', 'pricing',
+    'description', 
+    'pricing',
     'status',
-    'edit',
-    'actions',
-    
+    'actions', // Note: Ensure this is included as well
+    // This is the one causing the issue if missing or incorrectly spelled
   ];
+  
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -252,4 +253,9 @@ export class ListApiComponent implements OnInit, AfterViewInit {
       }
     );
   }
+  clearSearch() {
+    this.searchQuery = '';
+    this.applyFilter({ target: { value: '' } } as unknown as Event);
+}
+
 }

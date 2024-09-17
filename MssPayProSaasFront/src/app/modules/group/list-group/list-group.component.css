@@ -1,55 +1,97 @@
-.container {
-    padding: 16px;
-    background-color: #f5f5f5;
-}
-
-h2 {
-    color: #20b2aa;
-}
-
-.mat-elevation-z8 {
-    background: white;
+.client-list-container {
+    padding: 20px;
+    background-color: #f4f4f4;
     border-radius: 8px;
-    padding: 16px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.mat-header-cell {
-    background-color: #20b2aa;
-    color: white;
+.title {
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+    color: #009688;
+    font-weight: 2000;
+    margin-bottom: 50px;
+    text-transform: uppercase;
+}
+
+.title-icon {
+    margin-right: 10px;
+    font-size: 2rem;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.group-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.group-card:hover {
+    transform: translateY(-5px);
+}
+
+.group-name {
+    font-size: 1.2rem;
     font-weight: bold;
+    color: #009688;
+    margin-bottom: 15px;
 }
 
-.mat-cell {
-    font-size: 14px;
-    padding: 8px;
+.actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
 }
 
 .icon-button {
-    color: #757575;
+    background-color: #f1f1f1;
+    border-radius: 50%;
+    padding: 6px;
+    transition: background-color 0.3s, transform 0.3s;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.view-users mat-icon {
-    color: #1e88e5;
+.icon-button:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.1);
 }
 
-.add-users mat-icon {
-    color: #43a047;
+.action-icon {
+    font-size: 1rem;
+    color: #009688;
 }
 
-.add-super-user mat-icon {
-    color: #ffb300;
-}
-
-.edit-group mat-icon {
-    color: #1976d2;
-}
-
-.delete-group mat-icon {
-    color: #e53935;
-}
-
-.view-invoices mat-icon {
-    color: #6a1b9a;
+.green-button,
+.gray-button {
+    margin-top: 12px;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    transition: background-color 0.3s;
 }
 
 .green-button {
@@ -62,32 +104,36 @@ h2 {
     color: white;
 }
 
-.mat-header-row,
-.mat-row {
+.green-button:hover,
+.gray-button:hover {
+    opacity: 0.9;
+}
+
+.paginator {
+    margin-top: 20px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    width: 100%;
 }
 
-.mat-header-cell,
-.mat-cell {
-    flex: 1;
-    text-align: center;
-}
-
-.mat-header-cell:first-child,
-.mat-cell:first-child {
-    text-align: left;
-}
-
-.mat-header-cell:last-child,
-.mat-cell:last-child {
-    text-align: right;
-}
-
-.mat-icon-button {
-    margin: 0 4px;
-}
-
-.icon-button .mat-icon {
-    font-size: 20px;
+@media (max-width: 768px) {
+    .group-card {
+        padding: 10px;
+    }
+    .group-name {
+        font-size: 1rem;
+    }
+    .title {
+        font-size: 1.5rem;
+    }
+    .title-icon {
+        font-size: 1.6rem;
+    }
+    .action-icon {
+        font-size: 0.875rem;
+    }
+    .icon-button {
+        width: 32px;
+        height: 32px;
+    }
 }

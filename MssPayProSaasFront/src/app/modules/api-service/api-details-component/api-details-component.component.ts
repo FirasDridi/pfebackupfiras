@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ServiceUsageService } from '../ServiceUsageService';
-import { ServiceDetailsDto } from '../ServiceDetailsDto';
 
 @Component({
   selector: 'app-api-details-component',
@@ -9,7 +8,7 @@ import { ServiceDetailsDto } from '../ServiceDetailsDto';
   styleUrls: ['./api-details-component.component.css']
 })
 export class ApiDetailsComponentComponent implements OnInit {
-  serviceDetails: ServiceDetailsDto | null = null;
+  groupedServiceDetails: any[] = []; // Holds the grouped invoice details
   serviceId: string;
 
   constructor(
@@ -25,14 +24,34 @@ export class ApiDetailsComponentComponent implements OnInit {
   }
 
   loadServiceDetails(): void {
-    this.serviceUsageService.getServicesWithDetails().subscribe(
-      (details: ServiceDetailsDto[]) => {
-        this.serviceDetails = details.find(detail => detail.id === this.serviceId) || null;
+    this.serviceUsageService.getInvoicesByServiceId(this.serviceId).subscribe(
+      (invoices: any[]) => {
+        this.groupedServiceDetails = this.groupByUserAndDate(invoices);
       },
       (error) => {
         console.error('Error loading service details:', error);
       }
     );
+  }
+
+  groupByUserAndDate(invoices: any[]): any[] {
+    const grouped = invoices.reduce((acc, invoice) => {
+      const date = new Date(invoice.timestamp).toLocaleDateString();
+      const key = `${invoice.userName}-${date}`;
+
+      if (!acc[key]) {
+        acc[key] = {
+          userName: invoice.userName,
+          date: date,
+          serviceName: invoice.serviceName,
+          details: []
+        };
+      }
+      acc[key].details.push(invoice);
+      return acc;
+    }, {});
+
+    return Object.values(grouped);
   }
 
   close(): void {
