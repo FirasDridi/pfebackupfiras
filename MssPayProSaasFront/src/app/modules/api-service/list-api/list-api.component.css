@@ -1,3 +1,6 @@
+/* list-api.component.css */
+
+
 /* Ensure the layout takes full height */
 
 .layout-content {
@@ -44,6 +47,13 @@
 .custom-header-cell.description {
     background-color: #c8e6c9;
     color: #2e7d32;
+}
+
+.custom-header-cell.endpoint {
+    background-color: #e1bee7;
+    /* Light purple */
+    color: #6a1b9a;
+    /* Dark purple */
 }
 
 .custom-header-cell.pricing {
@@ -193,4 +203,31 @@ button.mat-icon-button.color-primary mat-icon {
 
 .mat-form-field.search-field:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Endpoint cell styling */
+
+.endpoint-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+.endpoint-cell:hover {
+    overflow: visible;
+    white-space: normal;
+    word-break: break-all;
+}
+
+
+/* Adjust column widths */
+
+.mat-column-endpoint {
+    max-width: 200px;
+}
+
+.mat-column-description {
+    max-width: 250px;
 }

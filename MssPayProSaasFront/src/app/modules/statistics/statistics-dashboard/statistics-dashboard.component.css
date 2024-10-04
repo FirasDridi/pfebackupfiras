@@ -1,3 +1,18 @@
+/* Container for each chart */
+
+.chart-container {
+    text-align: center;
+    flex: 1;
+    padding: 20px;
+    max-width: 500px;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+}
+
+
 /* Global Styles */
 
 body {
@@ -103,7 +118,16 @@ body {
 
 /* Additional Styles */
 
+@media (max-width: 1200px) {
+    .chart-container {
+        max-width: 45%;
+    }
+}
+
 @media (max-width: 768px) {
+    .chart-container {
+        max-width: 100%;
+    }
     .chart-title {
         font-size: 1.5rem;
     }

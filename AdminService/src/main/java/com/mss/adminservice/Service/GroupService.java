@@ -4,6 +4,7 @@ import com.mss.adminservice.Config.KeycloakConfig;
 import com.mss.adminservice.Config.UserGroupDTO;
 import com.mss.adminservice.Entities.Group;
 import com.mss.adminservice.Entities.ServiceGroupMapping;
+import com.mss.adminservice.Entities.SubscriptionRequest;
 import com.mss.adminservice.Entities.User;
 import com.mss.adminservice.Repo.GroupRepository;
 import com.mss.adminservice.Repo.ServiceGroupMappingRepository;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +28,8 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final KeycloakConfig keycloakConfig;
+    private final KeyCloakService keycloakService; // Injected KeyCloakService
+
     private final UserRepository userRepository;
     private final ServiceGroupMappingRepository serviceGroupMappingRepository;
     private static final Logger logger = LoggerFactory.getLogger(GroupService.class);
@@ -55,25 +59,87 @@ public class GroupService {
     }
 
 
+    /**
+     * Updates an existing group with the provided details.
+     *
+     * @param groupId      The ID of the group to update.
+     * @param groupDetails The Group entity containing updated information.
+     * @return The updated Group entity.
+     */
     @Transactional
     public Group updateGroup(Long groupId, Group groupDetails) {
-        Group group = getGroupById(groupId);
-        group.setName(groupDetails.getName());
+        // Fetch the existing group
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("Group not found with ID: " + groupId));
+
+        // Update basic fields
+        if (groupDetails.getName() != null) {
+            group.setName(groupDetails.getName());
+        }
+        if (groupDetails.getDescription() != null) {
+            group.setDescription(groupDetails.getDescription());
+        }
+        if (groupDetails.getPaid() != null) {
+            group.setPaid(groupDetails.getPaid());
+        }
+        // Update other fields as necessary
+
+        // Update associated users if provided
+        if (groupDetails.getUsers() != null) {
+            Set<User> updatedUsers = new HashSet<>(userRepository.findAllById(
+                    groupDetails.getUsers().stream().map(User::getId).toList()));
+            group.setUsers(updatedUsers);
+        }
+
+        // Update associated services if provided
+        if (groupDetails.getAccessTokens() != null) {
+            group.setAccessTokens(groupDetails.getAccessTokens());
+        }
+
+        // Save the updated group to the database
         Group updatedGroup = groupRepository.save(group);
 
-        updateGroupInKeycloak(group);
+        // Update the group in Keycloak
+        updateGroupInKeycloak(updatedGroup);
 
         return updatedGroup;
     }
 
+
     @Transactional
     public void deleteGroup(Long groupId) {
         Group group = getGroupById(groupId);
-        groupRepository.delete(group);
 
+        // Fetch and delete subscription requests associated with the group
+        Set<SubscriptionRequest> subscriptionRequests = group.getSubscriptionRequests();
+        if (subscriptionRequests != null && !subscriptionRequests.isEmpty()) {
+            subscriptionRequests.clear(); // Due to orphanRemoval=true, this will delete the records
+            logger.info("Deleted {} subscription requests associated with Group ID: {}", subscriptionRequests.size(), groupId);
+        }
+
+        // Fetch users associated with the group
+        Set<User> users = new HashSet<>(group.getUsers());
+
+        for (User user : users) {
+            try {
+                // Delete user via KeycloakService
+                keycloakService.deleteUser(user.getKeycloakId());
+
+                // Log deletion
+                logger.info("User with ID: {} deleted successfully.", user.getId());
+            } catch (RuntimeException e) {
+                logger.error("Error deleting user with ID: {}", user.getId(), e);
+                // Decide whether to continue or abort. Here, we choose to continue.
+            }
+        }
+
+        // Now delete the group from Keycloak
         deleteGroupInKeycloak(group);
-    }
 
+        // Finally, delete the group from the database
+        groupRepository.delete(group);
+        logger.info("Group with ID: {} deleted successfully.", groupId);
+    }
     public List<User> getUsersByGroup(Long groupId) {
         return userRepository.findByGroupsId(groupId);
     }
@@ -102,26 +168,40 @@ public class GroupService {
         }
     }
 
+    /**
+     * Updates the group information in Keycloak.
+     *
+     * @param group The Group entity to update in Keycloak.
+     */
     private void updateGroupInKeycloak(Group group) {
-        GroupsResource groupsResource = keycloakConfig.getInstance().realm(KeycloakConfig.realm).groups();
-        List<GroupRepresentation> groups = groupsResource.groups();
-        for (GroupRepresentation groupRep : groups) {
-            if (groupRep.getName().equals(group.getName())) {
-                groupRep.setName(group.getName());
-                groupsResource.group(groupRep.getId()).update(groupRep);
-                return;
-            }
+        try {
+            // Fetch the group representation from Keycloak using keycloakId
+            org.keycloak.admin.client.resource.GroupsResource groupsResource =
+                    KeycloakConfig.getInstance().realm("mss-authent").groups();
+            GroupRepresentation groupRep = groupsResource.group(group.getKeycloakId()).toRepresentation();
+
+            // Update the group fields
+            groupRep.setName(group.getName());
+            groupRep.setAttributes(Map.of("description", List.of(group.getDescription())));
+
+            // Update the group in Keycloak
+            groupsResource.group(group.getKeycloakId()).update(groupRep);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to update group in Keycloak: " + e.getMessage(), e);
         }
     }
 
     private void deleteGroupInKeycloak(Group group) {
-        GroupsResource groupsResource = keycloakConfig.getInstance().realm(KeycloakConfig.realm).groups();
-        List<GroupRepresentation> groups = groupsResource.groups();
-        for (GroupRepresentation groupRep : groups) {
-            if (groupRep.getName().equals(group.getName())) {
-                groupsResource.group(groupRep.getId()).remove();
-                return;
-            }
+        try {
+            GroupsResource groupsResource = keycloakConfig.getInstance().realm(KeycloakConfig.realm).groups();
+            GroupRepresentation groupRep = groupsResource.group(group.getKeycloakId()).toRepresentation();
+            groupsResource.group(group.getKeycloakId()).remove();
+            logger.info("Group with Keycloak ID: {} deleted from Keycloak.", group.getKeycloakId());
+        } catch (NotFoundException e) {
+            logger.warn("Group not found in Keycloak with ID: {}. Proceeding with database deletion.", group.getKeycloakId());
+        } catch (Exception e) {
+            logger.error("Failed to delete group with Keycloak ID: {}", group.getKeycloakId(), e);
+            throw new RuntimeException("Failed to delete group with Keycloak ID: " + group.getKeycloakId(), e);
         }
     }
 
@@ -147,7 +227,26 @@ public class GroupService {
 
         return group;
     }
+    @Transactional
+    public void deleteAllAccessTokens(Long groupId) {
+        // Fetch the group by ID
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Group not found with ID: " + groupId));
 
+        // Clear all access tokens
+        Map<UUID, String> accessTokens = group.getAccessTokens();
+        if (accessTokens.isEmpty()) {
+            throw new IllegalArgumentException("No access tokens found for group with ID: " + groupId);
+        }
+
+        accessTokens.clear();
+
+        // Update the 'tokenGenerated' flag
+        group.setTokenGenerated(false);
+
+        // Save the updated group
+        groupRepository.save(group);
+    }
     @Transactional
     public Group toggleToken(Long id, UUID serviceId) {
         Optional<Group> groupOptional = groupRepository.findById(id);
@@ -182,7 +281,7 @@ public class GroupService {
             throw new RuntimeException("User not found with ID: " + userId);
         }
 
-        List<Group> groups = groupRepository.findByUsersContaining(Optional.of(user.get()));
+        List<Group> groups = groupRepository.findByUsersContaining(user.get());
         return groups.stream().map(group -> {
             UserGroupDTO userGroupDTO = new UserGroupDTO();
             userGroupDTO.setGroupId(group.getId());

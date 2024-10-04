@@ -1,3 +1,5 @@
+// list-api.component.ts
+
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ServiceDto } from '../ServiceDto';
@@ -12,8 +14,8 @@ import { ApiDetailsComponentComponent } from '../api-details-component/api-detai
 import { GroupDto } from '../../group/group.dto';
 import { UserService } from '../../user/user.service';
 import { AddApiComponent } from '../add-api/add-api.component';
-import { DeleteConfirmationDialog } from '../add-api/delete-confirmation-dialog/delete-confirmation-dialog.component';
-import { FactureService } from '../../facture/facture.service'; // Import FactureService
+import { FactureService } from '../../facture/facture.service';
+import { DeleteConfirmationDialogComponent } from '../add-api/delete-confirmation-dialog/delete-confirmation-dialog.component';
 
 @Component({
   selector: 'app-list-api',
@@ -30,13 +32,12 @@ export class ListApiComponent implements OnInit, AfterViewInit {
     'createdDate',
     'lastModifiedDate',
     'name',
-    'description', 
+    'description',
+    'endpoint',        // Added endpoint here
     'pricing',
     'status',
-    'actions', // Note: Ensure this is included as well
-    // This is the one causing the issue if missing or incorrectly spelled
+    'actions',
   ];
-  
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -51,7 +52,7 @@ export class ListApiComponent implements OnInit, AfterViewInit {
     private groupService: GroupService,
     private keycloakService: KeycloakService,
     private cdr: ChangeDetectorRef,
-    private factureService: FactureService // Inject FactureService
+    private factureService: FactureService
   ) {}
 
   ngOnInit(): void {
@@ -148,7 +149,8 @@ export class ListApiComponent implements OnInit, AfterViewInit {
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.searchQuery = filterValue.trim().toLowerCase(); // Update searchQuery
+    this.dataSource.filter = this.searchQuery;
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -166,12 +168,12 @@ export class ListApiComponent implements OnInit, AfterViewInit {
   }
 
   confirmDelete(service: ServiceDto): void {
-    const dialogRef = this.dialog.open(DeleteConfirmationDialog, {
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
       width: '250px',
-      data: { message: 'Are you sure you want to delete this service?' }
+      data: { message: 'Are you sure you want to delete this service?' },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result === true) {
         this.deleteService(service);
       }
@@ -253,9 +255,9 @@ export class ListApiComponent implements OnInit, AfterViewInit {
       }
     );
   }
+
   clearSearch() {
     this.searchQuery = '';
     this.applyFilter({ target: { value: '' } } as unknown as Event);
-}
-
+  }
 }

@@ -10,5 +10,10 @@ export class UserGroupDTO {
   groupName?: string;
   description?: string;
   name?: string;  // Add this line
+  tokenGenerated?: boolean; // Add this line
+
   roles: any;
+  keycloakId: any;
+  lastname: string | undefined;
+  firstname: string | undefined;
 }

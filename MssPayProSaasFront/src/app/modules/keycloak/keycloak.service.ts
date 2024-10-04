@@ -109,4 +109,9 @@ export class KeycloakService {
     console.error('An error occurred:', error.message);
     return throwError('Something bad happened; please try again later.');
   }
+
+  getCsrfToken(): Observable<any> {
+    return this.http.get('http://localhost:8884/api/init', { withCredentials: true });
+  }
+
 }

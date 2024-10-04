@@ -23,6 +23,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MenubarModule } from 'primeng/menubar';
 import { MatTabsModule } from '@angular/material/tabs';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     ButtonModule,
     MatSidenavModule,
     MatToolbarModule,
-    MenubarModule,MatTabsModule
+    MenubarModule,MatTabsModule,MatProgressSpinnerModule
   ],
   exports: [
     ListUserComponent,

@@ -28,7 +28,7 @@ public class SubscriptionRequest {
     private String notificationStatus; // PENDING, NOTIFIED
     private Long userId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
     private Group group;

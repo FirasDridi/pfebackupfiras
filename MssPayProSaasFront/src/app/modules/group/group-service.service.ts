@@ -36,9 +36,9 @@ export class GroupService {
     return this.http.get<UserGroupDTO[]>(`${this.baseUrl}/${groupId}/users`);
   }
 
-  toggleAccessToken(groupId: string): Observable<UserGroupDTO> {
-    return this.http.post<UserGroupDTO>(`${this.baseUrl}/toggleToken/${groupId}`, {});
-}
+  deleteAllAccessTokens(groupId: string): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/${groupId}/access-tokens`);
+  }
 
 
   getGroupApis(groupId: string): Observable<ServiceDto[]> {

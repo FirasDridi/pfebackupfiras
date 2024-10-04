@@ -22,8 +22,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AdmindashComponent } from '../../ad-dash/admindash/admindash.component';
-import { DeleteConfirmationDialog } from './add-api/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { DeleteConfirmationDialogComponent } from './add-api/delete-confirmation-dialog/delete-confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +32,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     EditServiceComponent,
     ApiDetailsComponentComponent,
     AddServiceToGroupComponent,
-    DeleteConfirmationDialog,
+    DeleteConfirmationDialogComponent,
   ],
   imports: [
     CommonModule,

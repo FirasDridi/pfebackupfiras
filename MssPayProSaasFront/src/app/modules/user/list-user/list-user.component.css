@@ -1,3 +1,37 @@
+/* Title Styling - Center Alignment */
+
+.user-list-header {
+    display: flex;
+    align-items: center;
+    /* Vertical alignment */
+    justify-content: center;
+    /* Center the text and icon */
+    font-size: 2rem;
+    /* Ensure the text size is consistent */
+    color: #00796b;
+    /* Color for both icon and text */
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.user-list-header .title-icon {
+    font-size: 2rem;
+    /* Make the icon the same size as the text */
+    margin-right: 10px;
+    /* Space between the icon and the text */
+    vertical-align: middle;
+}
+
+.user-list-header span {
+    display: inline-block;
+    line-height: 1.2;
+    /* Ensures the text aligns properly with the icon */
+}
+
+
+/* General Table and Container Styles */
+
 .user-list-container {
     padding: 20px;
     background-color: #f9f9f9;
@@ -8,20 +42,16 @@
     text-align: center;
 }
 
-.title {
-    display: flex;
-    align-items: center;
-    font-size: 2rem;
-    color: #00796b;
-    font-weight: 600;
-    margin-bottom: 20px;
-    justify-content: center;
-    text-transform: uppercase;
+.user-table th {
+    text-align: left;
+    background-color: #f5f5f5;
+    color: #0f520f;
+    font-weight: bold;
 }
 
-.title-icon {
-    margin-right: 10px;
-    font-size: 2.5rem;
+.user-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
 }
 
 .table-wrapper {
@@ -95,11 +125,27 @@
     vertical-align: middle;
 }
 
+
+/* Paginator Styles */
+
 .paginator {
     margin-top: 20px;
     display: flex;
     justify-content: center;
 }
+
+
+/* Spinner Styles */
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+
+/* Responsive Adjustments */
 
 @media (max-width: 768px) {
     .header-cell,

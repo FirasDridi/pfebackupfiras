@@ -1,20 +1,15 @@
-.edit-user {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-}
+/* File: edit-user.component.css */
 
 mat-form-field {
     width: 100%;
-    margin-bottom: 16px;
 }
 
-h2 {
-    margin-bottom: 20px;
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
 }
 
-button {
-    margin-top: 10px;
-    margin-right: 10px;
+.dialog-actions button {
+    margin-left: 10px;
 }

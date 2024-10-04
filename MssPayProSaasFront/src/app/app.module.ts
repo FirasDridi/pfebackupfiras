@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS,HttpClientXsrfModule  } from '@angular/common/http';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -57,6 +57,10 @@ export function initializeKeycloak(keycloak: KeycloakService) {
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    HttpClientXsrfModule.withOptions({
+      cookieName: 'XSRF-TOKEN', // Nom du cookie envoyé par le serveur
+      headerName: 'X-XSRF-TOKEN' // Nom de l'en-tête à envoyer au serveur
+    }),
     ReactiveFormsModule,
     FormsModule,
     MatIconModule,
@@ -92,7 +96,7 @@ export function initializeKeycloak(keycloak: KeycloakService) {
     MatInputModule,
     MatSortModule,
     FactureModule,
-    
+
   ],
   providers: [
     {

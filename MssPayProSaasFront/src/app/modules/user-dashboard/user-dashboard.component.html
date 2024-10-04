@@ -1,11 +1,7 @@
+<!-- File Path: src/app/modules/user-dashboard/user-dashboard.component.html -->
+
 <mat-tab-group class="custom-tab-group" backgroundColor="primary" color="accent">
-    <mat-tab *ngFor="let item of menuItems" [label]="item.label || ''">
-        <ng-template mat-tab-label>
-            <section class="tab-section-container" [routerLink]="item.routerLink">
-                <mat-icon>{{ item.icon }}</mat-icon> {{ item.label || '' }}
-            </section>
-        </ng-template>
-    </mat-tab>
+    <!-- ... existing tab code ... -->
 </mat-tab-group>
 
 <div class="page-content">
@@ -16,51 +12,64 @@
     <!-- Add User button for superusers -->
     <div *ngIf="isSuperUser" class="add-user-section">
         <button mat-raised-button color="primary" (click)="openAddUserDialog()">
-        <mat-icon>person_add</mat-icon> Add User
-      </button>
+      <mat-icon>person_add</mat-icon> Add User
+    </button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="spinner-container">
+        <mat-spinner></mat-spinner>
     </div>
 
     <!-- User table section -->
-    <div class="user-table-section" *ngIf="selectedGroupId && usersInGroups[selectedGroupId]?.length">
+    <div class="user-table-section" *ngIf="!isLoading && selectedGroupId && usersInGroups[selectedGroupId]?.length">
         <mat-card class="user-table-card">
             <table mat-table [dataSource]="usersInGroups[selectedGroupId]" class="mat-elevation-z8">
-
                 <!-- Username Column -->
                 <ng-container matColumnDef="username">
                     <th mat-header-cell *matHeaderCellDef> Username </th>
                     <td mat-cell *matCellDef="let user">
-                        <mat-icon>person</mat-icon> {{ user.username }}
-                        <span *ngIf="user.isSuperUser" class="superuser-badge">
-                        <mat-icon>verified</mat-icon> Superuser
-                      </span>
+                        <mat-icon>person</mat-icon> {{ user.username || user.userName }}
+                        <mat-icon *ngIf="user.superUser" class="superuser-badge" matTooltip="Superuser">star</mat-icon>
                     </td>
                 </ng-container>
 
                 <!-- First Name Column -->
                 <ng-container matColumnDef="firstname">
                     <th mat-header-cell *matHeaderCellDef> First Name </th>
-                    <td mat-cell *matCellDef="let user"> {{ user.firstname }} </td>
+                    <td mat-cell *matCellDef="let user"> {{ user.firstName || user.firstname }} </td>
                 </ng-container>
 
                 <!-- Last Name Column -->
                 <ng-container matColumnDef="lastName">
                     <th mat-header-cell *matHeaderCellDef> Last Name </th>
-                    <td mat-cell *matCellDef="let user"> {{ user.lastname }} </td>
+                    <td mat-cell *matCellDef="let user"> {{ user.lastName || user.lastname }} </td>
                 </ng-container>
 
                 <!-- Email Column -->
                 <ng-container matColumnDef="email">
                     <th mat-header-cell *matHeaderCellDef> Email </th>
-                    <td mat-cell *matCellDef="let user"> {{ user.email }} </td>
+                    <td mat-cell *matCellDef="let user"> {{ user.email || user.emailId }} </td>
                 </ng-container>
 
                 <!-- Actions Column -->
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef> Actions </th>
                     <td mat-cell *matCellDef="let user">
-                        <button mat-icon-button (click)="viewUserInvoices(user.id)" matTooltip="View Invoices">
-                        <mat-icon>receipt_long</mat-icon>
-                      </button>
+                        <!-- View Invoices Button -->
+                        <button mat-icon-button (click)="viewUserInvoices(user.id)" matTooltip="View Invoices" aria-label="View Invoices">
+              <mat-icon>receipt_long</mat-icon>
+            </button>
+
+                        <!-- Edit User Button -->
+                        <button mat-icon-button *ngIf="isSuperUser" (click)="editUser(user)" matTooltip="Edit User" aria-label="Edit User">
+              <mat-icon>edit</mat-icon>
+            </button>
+
+                        <!-- Delete User Button -->
+                        <button mat-icon-button *ngIf="isSuperUser" (click)="deleteUser(user)" matTooltip="Delete User" aria-label="Delete User">
+              <mat-icon color="warn">delete</mat-icon>
+            </button>
                     </td>
                 </ng-container>
 
@@ -72,7 +81,7 @@
     </div>
 
     <!-- Message when no users are available -->
-    <div *ngIf="selectedGroupId && !usersInGroups[selectedGroupId]?.length" class="no-users-message">
+    <div *ngIf="!isLoading && selectedGroupId && !usersInGroups[selectedGroupId]?.length" class="no-users-message">
         <p>No users available in this group.</p>
     </div>
 </div>

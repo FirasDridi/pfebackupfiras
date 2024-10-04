@@ -1,6 +1,8 @@
+/* File: user-profile.component.css */
+
 .user-profile-card {
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     max-width: 800px;
@@ -44,7 +46,6 @@
 .profile-table td.label {
     font-weight: bold;
     width: 150px;
-    /* Adjust width for consistent alignment */
 }
 
 .profile-table td {
@@ -53,26 +54,17 @@
 
 .profile-table td:first-child {
     width: 40px;
-    /* Set a fixed width for icons */
 }
 
-.profile-table td.mat-icon {
-    text-align: center;
-    color: #009688;
+.edit-profile-button {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.user-groups {
+    margin-top: 40px;
 }
 
 tr:last-child td {
     border-bottom: none;
-}
-
-.mat-primary {
-    background-color: #009688 !important;
-}
-
-.mat-accent {
-    background-color: #00796b !important;
-}
-
-.mat-warn {
-    background-color: #d32f2f !important;
 }

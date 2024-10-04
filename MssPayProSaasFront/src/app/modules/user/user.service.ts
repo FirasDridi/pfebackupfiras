@@ -1,5 +1,7 @@
+// src/app/modules/user/user.service.ts
+
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse ,HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UserGroupDTO } from '../group/group/UserGroupDTO';
@@ -13,9 +15,7 @@ import { ServiceDetailsDto } from '../api-service/ServiceDetailsDto';
 })
 export class UserService {
   private baseUrl = 'http://localhost:8884/admin'; // Update URL accordingly
-
   private appUrl = 'http://localhost:8884';
-
   private apiurl = 'http://localhost:8081/service/tt';
 
   constructor(private http: HttpClient) {}
@@ -32,13 +32,17 @@ export class UserService {
       .post<any>(`${this.baseUrl}/addUser`, user)
       .pipe(catchError(this.handleError));
   }
+
   updateUser(user: UserDTO): Observable<UserDTO> {
     return this.http
       .post<UserDTO>(`${this.baseUrl}/updateUser`, user)
       .pipe(catchError(this.handleError));
   }
 
-  deleteUser(id: string): Observable<void> {
+  deleteUser(id: number): Observable<void> { // Changed id type to number
+    if (id === undefined || id === null) {
+      return throwError(() => new Error('User ID is undefined.'));
+    }
     return this.http
       .delete<void>(`${this.baseUrl}/deleteUser/${id}`)
       .pipe(catchError(this.handleError));
@@ -59,20 +63,32 @@ export class UserService {
     return throwError(() => new Error(errorMessage));
   }
 
-
   addUsersToGroup(groupName: string, users: UserGroupDTO[]): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<any>(`${this.baseUrl}/addUsersToGroup?groupName=${groupName}`, users, { headers })
       .pipe(catchError(this.handleError));
   }
 
-  getAllUsers(): Observable<UserDTO[]> {
-    return this.http.get<UserDTO[]>(`${this.baseUrl}/getAllUsers`);
+  // New method to fetch users with database ID
+  getAllDbUsers(): Observable<UserDTO[]> {
+    return this.http.get<UserDTO[]>(`${this.baseUrl}/getAllUsers`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getUserDetailsFromKeycloak(userId: string): Observable<UserDTO> {
+    if (!userId) {
+      return throwError(() => new Error('User ID is undefined.'));
+    }
+    return this.http.get<UserDTO>(`${this.baseUrl}/keycloak/user/${userId}`).pipe(
+      catchError(this.handleError)
+    );
   }
 
   getUserServices(userId: number): Observable<Set<string>> {
     return this.http.get<Set<string>>(`${this.baseUrl}/userServices/${userId}`);
   }
+
   addServiceToGroup(serviceId: string, groupId: string): Observable<void> {
     const url = `${this.baseUrl}/addGroupToService?serviceId=${serviceId}&groupId=${groupId}`;
     return this.http.post<void>(url, {});
@@ -95,10 +111,27 @@ export class UserService {
   getServiceIdsByGroupId(groupId: number): Observable<string[]> {
     return this.http.get<string[]>(`${this.appUrl}/gets/${groupId}/servicesId`);
   }
+
   getServicesByIds(ids: string[]): Observable<ServiceDetailsDto[]> {
     const idsParam = ids.join(',');
     return this.http.get<ServiceDetailsDto[]>(
       `${this.apiurl}/gets/${idsParam}/services`
     );
+  }
+  updateConnectedUser(user: UserDTO): Observable<UserDTO> {
+    return this.http
+      .post<UserDTO>(`${this.baseUrl}/user/updateConnectedUser`, user)
+      .pipe(catchError(this.handleError));
+  }
+  /**
+   * Updates a user by their Keycloak ID.
+   * @param id The Keycloak ID of the user.
+   * @param user The updated user data.
+   * @returns An Observable of the updated UserDTO.
+   */
+  updateUserById(id: string, user: UserDTO): Observable<UserDTO> {
+    return this.http
+      .post<UserDTO>(`${this.baseUrl}/user/updateUser/${id}`, user)
+      .pipe(catchError(this.handleError));
   }
 }

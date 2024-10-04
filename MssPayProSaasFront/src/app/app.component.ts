@@ -14,6 +14,14 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+     // Récupérer le token CSRF si nécessaire
+  this.keycloakService.getCsrfToken().subscribe(
+    () => {
+      console.log('Token CSRF récupéré avec succès');
+    },
+    error => {
+      console.error('Erreur lors de la récupération du token CSRF', error);
+    });
     if (this.keycloakService.isLoggedIn()) {
       if (this.keycloakService.hasRole('admin')) {
         this.router.navigate(['/admins/groups']);

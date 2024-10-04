@@ -88,14 +88,26 @@ public class AdminController {
     }
 
     @DeleteMapping("/deleteUser/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable String userId) {
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         try {
-            kc.deleteUser(userId); // Call the KeycloakService to delete the user from Keycloak
+            // Fetch the user from the database using the database ID
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+            // Get the Keycloak ID
+            String keycloakId = user.getKeycloakId();
+
+            // Delete the user from Keycloak and database
+            kc.deleteUser(keycloakId);
+
             return ResponseEntity.ok("{\"message\": \"User deleted successfully with ID: " + userId + "\"}");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+            logger.error("Error deleting user with ID: {}", userId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+
 
     @GetMapping("/getUser/{userId}")
     public ResponseEntity<UserRepresentation> getUserById(@PathVariable String userId) {
@@ -375,6 +387,94 @@ public class AdminController {
     public UserDTO getUserDetailsFromKeycloak(@PathVariable String userId) {
         return kc.getUserDetailsFromKeycloak(userId);
     }
+    /**
+     * Updates the connected user's profile and password.
+     *
+     * @param userDTO The user data transfer object containing updated information.
+     * @return A ResponseEntity containing the updated UserDTO or an error message.
+     */
+    @PostMapping("/user/updateConnectedUser")
+    public ResponseEntity<?> updateConnectedUser(@RequestBody UserDTO userDTO) {
+        logger.debug("Received update request for connected user.");
+
+        try {
+            // Retrieve keycloakId from security context
+            String keycloakId = kc.getCurrentUserId();
+
+            if (keycloakId == null || keycloakId.isEmpty()) {
+                logger.error("Unable to retrieve Keycloak ID from security context.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Unauthorized."));
+            }
+
+            userDTO.setKeycloakId(keycloakId); // Set the keycloakId from context
+
+            User updatedUser = kc.updateConnectedUser(userDTO);
+            UserDTO responseDTO = new UserDTO(updatedUser);
+
+            logger.info("Successfully updated connected user with ID: {}", updatedUser.getId());
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            logger.error("Error updating connected user: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Failed to update user."));
+        }
+    }
+
+    /**
+     * Retrieves the connected user's details, including database ID.
+     *
+     * @return ResponseEntity containing UserDTO.
+     */
+    /**
+     * Retrieves the connected user's details, including database ID.
+     *
+     * @return ResponseEntity containing UserDTO.
+     */
+    @GetMapping("/user/connectedUserInfo")
+    public ResponseEntity<UserDTO> getConnectedUserInfo() {
+        try {
+            UserDTO userDTO = kc.getConnectedUserDetails();
+            return ResponseEntity.ok(userDTO);
+        } catch (Exception e) {
+            logger.error("Error retrieving connected user info: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+    @PostMapping("/user/updateUser/{id}")
+    public ResponseEntity<?> updateUserById(@PathVariable String id, @RequestBody UserDTO userDTO) {
+        logger.debug("Received update request for user with Keycloak ID: {}", id);
+
+        try {
+            // Ensure that the provided ID is not null or empty
+            if (id == null || id.isEmpty()) {
+                logger.error("User ID is missing in the update request.");
+                return ResponseEntity.badRequest().body(Map.of("message", "User ID is required."));
+            }
+
+            // Optionally, ensure that the keycloakId in UserDTO matches the path variable
+            if (userDTO.getKeycloakId() != null && !userDTO.getKeycloakId().equals(id)) {
+                logger.warn("Mismatch between path variable ID and UserDTO keycloakId.");
+                return ResponseEntity.badRequest().body(Map.of("message", "Mismatch between User ID and Keycloak ID."));
+            }
+
+            // Set the keycloakId in UserDTO to ensure consistency
+            userDTO.setKeycloakId(id);
+
+            // Perform the update
+            User updatedUser = kc.updateUserById(id, userDTO);
+            UserDTO responseDTO = new UserDTO(updatedUser);
+
+            logger.info("Successfully updated user with Keycloak ID: {}", id);
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            logger.error("Error updating user with Keycloak ID: {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Failed to update user."));
+        }
+    }
+
     @Payant
     @PostMapping("/firastest")
     public ResponseEntity<String> ttc() {

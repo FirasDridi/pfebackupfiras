@@ -1,8 +1,16 @@
 <div class="user-list-container">
-    <h2 class="title">
-        <mat-icon class="title-icon">people</mat-icon>User List
+    <h2 class="user-list-header">
+        <mat-icon class="title-icon">people</mat-icon>
+        <span>User List</span>
     </h2>
-    <div class="table-wrapper">
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="spinner-container">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <!-- User Table -->
+    <div class="table-wrapper" *ngIf="!isLoading">
         <table mat-table [dataSource]="dataSource" class="user-table mat-elevation-z8">
             <!-- Username Column -->
             <ng-container matColumnDef="userName">
@@ -57,9 +65,11 @@
                 </td>
             </ng-container>
 
+            <!-- Header and Row Declarations -->
             <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns" class="data-row"></tr>
         </table>
     </div>
+
     <mat-paginator [length]="totalUsers" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons class="paginator"></mat-paginator>
 </div>

@@ -1,31 +1,63 @@
 <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
+
     <!-- Service Usage Pie Chart with Titles and Enhanced Legends -->
-    <div style="text-align: center; flex: 1; padding: 20px; max-width: 500px;">
+    <div class="chart-container">
         <h3 class="chart-title">Service Usage Statistics</h3>
         <ngx-charts-pie-chart [scheme]="colorScheme" [results]="usageChartData" [legend]="false" [labels]="true" [doughnut]="true" [arcWidth]="0.2" [view]="[400, 400]">
         </ngx-charts-pie-chart>
         <div class="custom-legend">
             <h4 class="legend-title">Service Call Statistics</h4>
             <div *ngFor="let entry of usageChartData" class="legend-item">
-                <span class="legend-color" [style.backgroundColor]="entry.color" title="Color"></span>
-                <span class="legend-label">{{ entry.name }}:</span>
+                <span class="legend-color" [style.backgroundColor]="colorScheme.domain[usageChartData.indexOf(entry) % colorScheme.domain.length]" title="Color"></span>
+                <span class="legend-label">{{ entry.name || 'Unknown' }}:</span>
                 <span class="legend-value">{{ entry.value | number }} calls</span>
             </div>
         </div>
     </div>
 
     <!-- Revenue Pie Chart with Titles and Enhanced Legends -->
-    <div style="text-align: center; flex: 1; padding: 20px; max-width: 500px;">
+    <div class="chart-container">
         <h3 class="chart-title">Revenue Statistics</h3>
         <ngx-charts-pie-chart [scheme]="colorScheme" [results]="revenueChartData" [legend]="false" [labels]="true" [doughnut]="true" [arcWidth]="0.2" [view]="[400, 400]">
         </ngx-charts-pie-chart>
         <div class="custom-legend">
             <h4 class="legend-title">Revenue by Service</h4>
             <div *ngFor="let entry of revenueChartData" class="legend-item">
-                <span class="legend-color" [style.backgroundColor]="entry.color" title="Color"></span>
-                <span class="legend-label">{{ entry.name }}:</span>
+                <span class="legend-color" [style.backgroundColor]="colorScheme.domain[revenueChartData.indexOf(entry) % colorScheme.domain.length]" title="Color"></span>
+                <span class="legend-label">{{ entry.name || 'Unknown' }}:</span>
                 <span class="legend-value">${{ entry.value | number:'1.2-2' }} earned</span>
             </div>
         </div>
     </div>
+
+    <!-- User Usage Pie Chart -->
+    <div class="chart-container">
+        <h3 class="chart-title">User Usage Statistics</h3>
+        <ngx-charts-pie-chart [scheme]="colorScheme" [results]="userUsageChartData" [legend]="false" [labels]="true" [doughnut]="true" [arcWidth]="0.2" [view]="[400, 400]">
+        </ngx-charts-pie-chart>
+        <div class="custom-legend">
+            <h4 class="legend-title">Usage by User</h4>
+            <div *ngFor="let entry of userUsageChartData" class="legend-item">
+                <span class="legend-color" [style.backgroundColor]="colorScheme.domain[userUsageChartData.indexOf(entry) % colorScheme.domain.length]" title="Color"></span>
+                <span class="legend-label">{{ entry.name || 'Unknown' }}:</span>
+                <span class="legend-value">{{ entry.value | number }} calls</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group Revenue Pie Chart -->
+    <div class="chart-container">
+        <h3 class="chart-title">Group Revenue Statistics</h3>
+        <ngx-charts-pie-chart [scheme]="colorScheme" [results]="groupRevenueChartData" [legend]="false" [labels]="true" [doughnut]="true" [arcWidth]="0.2" [view]="[400, 400]">
+        </ngx-charts-pie-chart>
+        <div class="custom-legend">
+            <h4 class="legend-title">Revenue by Group</h4>
+            <div *ngFor="let entry of groupRevenueChartData" class="legend-item">
+                <span class="legend-color" [style.backgroundColor]="colorScheme.domain[groupRevenueChartData.indexOf(entry) % colorScheme.domain.length]" title="Color"></span>
+                <span class="legend-label">{{ entry.name || 'Unknown' }}:</span>
+                <span class="legend-value">${{ entry.value | number:'1.2-2' }} earned</span>
+            </div>
+        </div>
+    </div>
+
 </div>

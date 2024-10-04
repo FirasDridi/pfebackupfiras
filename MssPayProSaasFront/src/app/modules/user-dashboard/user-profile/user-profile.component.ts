@@ -1,83 +1,131 @@
+// user-profile.component.ts
+
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { KeycloakService } from '../../keycloak/keycloak.service';
 import { UserService } from '../../user/user.service';
 import { UserDTO } from '../../user/user.dto';
 import { GroupDto } from '../../group/group.dto';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css']
+  styleUrls: ['./user-profile.component.css'],
 })
 export class UserProfileComponent implements OnInit {
-  userProfileForm!: FormGroup;
-  isEditMode = false;
   user: UserDTO | null = null;
   userGroups: GroupDto[] = [];
+  editProfileForm!: FormGroup;
 
   constructor(
     private keycloakService: KeycloakService,
-    private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
-    private userService: UserService
+    private userService: UserService,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
+    // Initialize the form with empty/default values
+    this.editProfileForm = this.fb.group({
+      firstname: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.minLength(6)]], // Password is optional
+    });
+
     const userId = this.keycloakService.getUserId();
     if (userId) {
       this.loadUserDetails(userId);
     } else {
       console.error('User ID is not available');
+      this.snackBar.open('User ID is not available', 'Close', {
+        duration: 3000,
+      });
     }
   }
 
+  /**
+   * Loads user details from the backend.
+   * @param userId The Keycloak ID of the user.
+   */
   loadUserDetails(userId: string): void {
-    this.userService.getUserDetails(userId).subscribe(
-      response => {
-        this.user = response.user || null;
-        this.userGroups = response.groups || [];
-        this.userProfileForm = this.formBuilder.group({
-          username: [{ value: this.user?.username, disabled: true }],
-          firstName: [this.user?.firstName, Validators.required],
-          lastName: [this.user?.lastName, Validators.required],
-          email: [this.user?.email, [Validators.required, Validators.email]]
-        });
+    this.userService.getUserDetailsFromKeycloak(userId).subscribe(
+      (userDTO) => {
+        if (userDTO) {
+          this.user = userDTO;
+          this.userGroups = userDTO.groups || [];
+
+          console.log('User details loaded:', this.user);
+
+          // Update the form with user data
+          this.editProfileForm.patchValue({
+            firstname: this.user.firstname,
+            lastName: this.user.lastName,
+            email: this.user.email,
+          });
+        } else {
+          console.error('User data is not available');
+          this.snackBar.open('User data is not available', 'Close', {
+            duration: 3000,
+          });
+        }
       },
-      error => {
+      (error) => {
         console.error('Error loading user details', error);
+        this.snackBar.open('Error loading user details', 'Close', {
+          duration: 3000,
+        });
       }
     );
   }
 
-  toggleEditMode(): void {
-    this.isEditMode = !this.isEditMode;
-    if (!this.isEditMode) {
-      this.ngOnInit(); // Reset form when exiting edit mode
-    }
-  }
-
+  /**
+   * Saves the updated profile.
+   */
   saveProfile(): void {
-    if (this.userProfileForm.valid) {
+    if (this.editProfileForm.valid && this.user) {
+      const userId = this.keycloakService.getUserId();
+      if (!userId) {
+        console.error('User ID is not available');
+        this.snackBar.open('User ID is not available', 'Close', {
+          duration: 3000,
+        });
+        return;
+      }
+
       const updatedUser: UserDTO = {
-        ...this.user,
-        ...this.userProfileForm.value
+        id: this.user.id, // Database ID
+        userName: this.user.userName,
+        firstname: this.editProfileForm.value.firstname,
+        lastName: this.editProfileForm.value.lastName,
+        email: this.editProfileForm.value.email,
+        password: this.editProfileForm.value.password,
+        superUser: this.user.superUser, // Preserve existing superUser status
+        roles: this.user.roles, // Preserve existing roles
+        keycloakId: this.user.keycloakId, // Preserve Keycloak ID
       };
-      this.userService.updateUser(updatedUser).subscribe(
-        () => {
-          this.snackBar.open('Profile updated successfully', 'Close', { duration: 3000 });
-          this.isEditMode = false;
+
+      console.log('Updating user with:', updatedUser);
+
+      this.userService.updateUserById(userId, updatedUser).subscribe(
+        (response) => {
+          this.snackBar.open('Profile updated successfully', 'Close', {
+            duration: 3000,
+          });
+          this.loadUserDetails(userId); // Reload user details
         },
-        () => {
-          this.snackBar.open('Failed to update profile', 'Close', { duration: 3000 });
+        (error) => {
+          console.error('Error updating profile:', error);
+          this.snackBar.open('Error updating profile', 'Close', {
+            duration: 3000,
+          });
         }
       );
+    } else {
+      this.snackBar.open('Please fill in all required fields', 'Close', {
+        duration: 3000,
+      });
     }
-  }
-
-  resetPassword(): void {
-    const accountUrl = this.keycloakService.getKeycloakInstance().createAccountUrl();
-    window.open(accountUrl, '_blank');
   }
 }

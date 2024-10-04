@@ -19,8 +19,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     List<Group> findByNameContaining(String groupName);
 
-    List<Group> findByUsersContaining(Optional<User> user);
-
+    List<Group> findByUsersContaining(User user);
     @Query("SELECT g FROM Group g JOIN g.accessTokens t WHERE KEY(t) = :serviceId AND VALUE(t) = :accessToken")
     Optional<Group> findByAccessToken(@Param("serviceId") UUID serviceId, @Param("accessToken") String accessToken);
 

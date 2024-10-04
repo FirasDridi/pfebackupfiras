@@ -4,6 +4,7 @@ import com.mss.adminservice.Config.KeycloakConfig;
 import com.mss.adminservice.Config.UserDTO;
 import com.mss.adminservice.Config.UserGroupDTO;
 import com.mss.adminservice.Entities.Group;
+import com.mss.adminservice.Entities.Role;
 import com.mss.adminservice.Entities.User;
 import com.mss.adminservice.Repo.GroupRepository;
 import com.mss.adminservice.Repo.UserRepository;
@@ -21,15 +22,15 @@ import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 // Other imports
@@ -41,6 +42,9 @@ public class KeyCloakService {
     private static final Logger logger = LoggerFactory.getLogger(KeyCloakService.class);
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final KeycloakConfig keycloakConfig;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public void addUserToGroup(UserGroupDTO userGroupDTO) {
         // Validate that required fields are not null or empty
@@ -103,6 +107,7 @@ public class KeyCloakService {
 
     private CredentialRepresentation createCredential(String password) {
         CredentialRepresentation credential = new CredentialRepresentation();
+        credential.setTemporary(true);  // Set the password as temporary
         credential.setType(CredentialRepresentation.PASSWORD);
         credential.setValue(password);
         return credential;
@@ -179,33 +184,57 @@ public class KeyCloakService {
     }
 
 
-    public void deleteUser(String userId) {
+    @Transactional
+    public void deleteUser(String keycloakId) {
         try {
-            // Log the user ID being processed
-            logger.info("Attempting to delete user with ID: {}", userId);
+            logger.info("Attempting to delete user with Keycloak ID: {}", keycloakId);
 
-            // Check if the user exists in Keycloak
-            UsersResource usersResource = KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
-            UserRepresentation user = usersResource.get(userId).toRepresentation();
-            if (user == null) {
-                logger.error("User not found in Keycloak with ID: {}", userId);
-                throw new RuntimeException("User not found in Keycloak with ID: " + userId);
+            // Delete user from Keycloak
+            UsersResource usersResource = keycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
+            usersResource.get(keycloakId).remove();
+            logger.info("User with Keycloak ID: {} deleted from Keycloak.", keycloakId);
+
+            // Find user in the database
+            Optional<User> optionalUser = userRepository.findByKeycloakId(keycloakId);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+
+                // Remove user from all associated groups
+                Set<Group> groups = new HashSet<>(user.getGroups());
+                for (Group group : groups) {
+                    group.getUsers().remove(user);
+                    groupRepository.save(group); // Persist changes
+                }
+
+                // Due to CascadeType.ALL and orphanRemoval=true, notifications are deleted automatically
+                userRepository.delete(user);
+                logger.info("User with Keycloak ID: {} deleted from the database.", keycloakId);
+            } else {
+                logger.warn("User not found in database with Keycloak ID: {}", keycloakId);
             }
-
-            // Remove the user from Keycloak
-            usersResource.get(userId).remove();
-
-            // Remove the user from the database
-            userRepository.deleteByKeycloakId(userId);
         } catch (NotFoundException e) {
-            logger.error("User not found in Keycloak with ID: {}", userId, e);
-            throw new RuntimeException("User not found in Keycloak with ID: " + userId);
+            // Handle case where user doesn't exist in Keycloak
+            logger.warn("User not found in Keycloak with ID: {}. Proceeding with group deletion.", keycloakId);
+            // Optionally, you can still attempt to delete from the database if necessary
+            Optional<User> optionalUser = userRepository.findByKeycloakId(keycloakId);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                Set<Group> groups = new HashSet<>(user.getGroups());
+                for (Group group : groups) {
+                    group.getUsers().remove(user);
+                    groupRepository.save(group);
+                }
+                userRepository.delete(user);
+                logger.info("User with Keycloak ID: {} deleted from the database.", keycloakId);
+            } else {
+                logger.warn("User not found in database with Keycloak ID: {}", keycloakId);
+            }
+            // Do not rethrow the exception to allow group deletion to continue
         } catch (Exception e) {
-            logger.error("Failed to delete user with ID: {}", userId, e);
-            throw new RuntimeException("Failed to delete user with ID: " + userId, e);
+            logger.error("Failed to delete user with Keycloak ID: {}", keycloakId, e);
+            throw new RuntimeException("Failed to delete user with Keycloak ID: " + keycloakId, e);
         }
     }
-
 
 
     public UserRepresentation getUserById(String userId) {
@@ -269,11 +298,30 @@ public class KeyCloakService {
     }
 
 
+    /**
+     * Retrieves the current authenticated user's Keycloak ID.
+     *
+     * @return The Keycloak ID (UUID string) of the authenticated user.
+     */
     public String getCurrentUserId() {
-        KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        AccessToken accessToken = token.getAccount().getKeycloakSecurityContext().getToken();
-        return accessToken.getSubject();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            logger.error("Authentication object is null.");
+            throw new RuntimeException("No authentication information found.");
+        }
+
+        logger.debug("Authentication type: {}", authentication.getClass().getName());
+        if (authentication instanceof KeycloakAuthenticationToken) {
+            KeycloakAuthenticationToken keycloakAuth = (KeycloakAuthenticationToken) authentication;
+            AccessToken accessToken = keycloakAuth.getAccount().getKeycloakSecurityContext().getToken();
+            logger.debug("Access Token Subject: {}", accessToken.getSubject());
+            return accessToken.getSubject();
+        } else {
+            logger.error("Authentication is not an instance of KeycloakAuthenticationToken. Actual type: {}", authentication.getClass().getName());
+            throw new RuntimeException("Unable to retrieve Keycloak ID for the authenticated user.");
+        }
     }
+
     public UserDTO findByKeycloakId(String keycloakId) {
         Optional<User> userOptional = userRepository.findByKeycloakId(keycloakId);
         return userOptional.map(UserDTO::new).orElse(null);
@@ -329,8 +377,14 @@ public class KeyCloakService {
         }
     }
 
+    /**
+     * Retrieves user details from Keycloak by user ID.
+     *
+     * @param userId The Keycloak ID of the user.
+     * @return UserDTO containing user details.
+     */
     public UserDTO getUserDetailsFromKeycloak(String userId) {
-        UsersResource usersResource = KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
+        UsersResource usersResource = keycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
         UserRepresentation userRepresentation = usersResource.get(userId).toRepresentation();
 
         // Find the local user by keycloakId
@@ -341,7 +395,7 @@ public class KeyCloakService {
         User user = userOptional.get();
 
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());  // Use the local Long ID
+        userDTO.setId(user.getId()); // Database ID
         userDTO.setUserName(userRepresentation.getUsername());
         userDTO.setEmail(userRepresentation.getEmail());
         userDTO.setFirstname(userRepresentation.getFirstName());
@@ -351,13 +405,200 @@ public class KeyCloakService {
         Set<String> roles = getUserRolesFromKeycloak(userId);
         userDTO.setRoles(roles);
 
+        // Set isSuperUser based on roles
+        userDTO.setSuperUser(roles.contains("superuser"));
+
         return userDTO;
     }
-
-    public Set<String> getUserRolesFromKeycloak(String userId) {
-        UsersResource usersResource = KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
-        List<RoleRepresentation> roles = usersResource.get(userId).roles().realmLevel().listEffective();
+    /**
+     * Retrieves the roles assigned to a user from Keycloak.
+     *
+     * @param keycloakId The Keycloak ID of the user.
+     * @return A set of role names.
+     */
+    public Set<String> getUserRolesFromKeycloak(String keycloakId) {
+        UsersResource usersResource = keycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
+        List<RoleRepresentation> roles = usersResource.get(keycloakId).roles().realmLevel().listEffective();
         return roles.stream().map(RoleRepresentation::getName).collect(Collectors.toSet());
+    }
+    /**
+     * Updates the connected user's profile and password.
+     *
+     * @param userDTO The user data transfer object containing updated information.
+     * @return The updated User entity from the database.
+     */
+    @Transactional
+    public User updateConnectedUser(UserDTO userDTO) {
+        try {
+            logger.debug("Starting update process for connected user.");
+
+            String keycloakId = getCurrentUserId();
+            logger.debug("Retrieved Keycloak ID: {}", keycloakId);
+
+            UsersResource usersResource = keycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
+            UserResource userResource = usersResource.get(keycloakId);
+
+            // Fetch current user representation from Keycloak
+            UserRepresentation userRepresentation = userResource.toRepresentation();
+            logger.debug("Fetched user representation from Keycloak: {}", userRepresentation.getUsername());
+
+            // Update fields
+            userRepresentation.setFirstName(userDTO.getFirstname());
+            userRepresentation.setLastName(userDTO.getLastName());
+            userRepresentation.setEmail(userDTO.getEmail());
+
+            // Update user in Keycloak
+            userResource.update(userRepresentation);
+            logger.info("Updated user information in Keycloak for user ID: {}", keycloakId);
+
+            // Update password in Keycloak if provided
+            if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+                CredentialRepresentation credential = new CredentialRepresentation();
+                credential.setType(CredentialRepresentation.PASSWORD);
+                credential.setValue(userDTO.getPassword());
+                credential.setTemporary(false);
+                userResource.resetPassword(credential);
+                logger.info("Password updated in Keycloak for user ID: {}", keycloakId);
+            }
+
+            // Fetch user from local database
+            User user = userRepository.findByKeycloakId(keycloakId)
+                    .orElseThrow(() -> new RuntimeException("User not found in database: " + keycloakId));
+            logger.debug("Fetched user from local database: {}", user.getUsername());
+
+            // Update local user fields
+            user.setFirstname(userDTO.getFirstname());
+            user.setLastname(userDTO.getLastName());
+            user.setEmail(userDTO.getEmail());
+
+            // Update password in local database if provided
+            if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+                logger.info("Password updated in local database for user ID: {}", user.getId());
+            }
+
+            // Save updated user to local database
+            User updatedUser = userRepository.save(user);
+            logger.info("Successfully updated connected user with ID: {}", updatedUser.getId());
+
+            return updatedUser;
+        } catch (NotFoundException e) {
+            logger.error("User not found in Keycloak: {}", e.getMessage(), e);
+            throw new RuntimeException("User not found in Keycloak.", e);
+        } catch (Exception e) {
+            logger.error("Error updating connected user: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to update connected user.", e);
+        }
+    }
+
+
+    /**
+     * Retrieves a user's Keycloak ID based on the authenticated session.
+     *
+     * @return The Keycloak ID of the current user.
+
+    public String getCcurrentUserId() { // Note: Method name has a typo and should be corrected if used elsewhere
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken) {
+            org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken keycloakAuth =
+                    (org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken) authentication;
+            org.keycloak.representations.AccessToken accessToken =
+                    keycloakAuth.getAccount().getKeycloakSecurityContext().getToken();
+            return accessToken.getSubject();
+        } else {
+            throw new RuntimeException("Unable to get Keycloak ID of the authenticated user.");
+        }
+    }  */
+    /**
+     * Retrieves the connected user's details, including database ID.
+     *
+     * @return UserDTO containing user details.
+     */
+    public UserDTO getConnectedUserDetails() {
+        String keycloakId = getCurrentUserId();
+
+        // Fetch user details from Keycloak
+        UsersResource usersResource = keycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
+        UserRepresentation userRepresentation = usersResource.get(keycloakId).toRepresentation();
+
+        // Fetch user from the local database
+        User user = userRepository.findByKeycloakId(keycloakId)
+                .orElseThrow(() -> new RuntimeException("User not found in database: " + keycloakId));
+
+        // Assemble UserDTO
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId()); // Database ID
+        userDTO.setUserName(userRepresentation.getUsername());
+        userDTO.setFirstname(userRepresentation.getFirstName());
+        userDTO.setLastName(userRepresentation.getLastName());
+        userDTO.setEmail(userRepresentation.getEmail());
+
+        // Fetch roles
+        Set<String> roles = getUserRolesFromKeycloak(keycloakId);
+        userDTO.setRoles(roles);
+
+        // Set isSuperUser based on roles
+        userDTO.setSuperUser(roles.contains("superuser"));
+
+        return userDTO;
+    }
+    @Transactional
+    public User updateUserById(String keycloakId, UserDTO userDTO) {
+        try {
+            logger.debug("Starting update process for user with Keycloak ID: {}", keycloakId);
+
+            // Fetch user from Keycloak
+            UsersResource usersResource = keycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
+            UserResource userResource = usersResource.get(keycloakId);
+            UserRepresentation userRepresentation = userResource.toRepresentation();
+            logger.debug("Fetched user representation from Keycloak.");
+
+            // Update user details in Keycloak
+            userRepresentation.setFirstName(userDTO.getFirstname());
+            userRepresentation.setLastName(userDTO.getLastName());
+            userRepresentation.setEmail(userDTO.getEmail());
+
+            userResource.update(userRepresentation);
+            logger.info("Updated user information in Keycloak for user ID: {}", keycloakId);
+
+            // Update password in Keycloak if provided
+            if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+                CredentialRepresentation credential = new CredentialRepresentation();
+                credential.setType(CredentialRepresentation.PASSWORD);
+                credential.setValue(userDTO.getPassword());
+                credential.setTemporary(false);
+                userResource.resetPassword(credential);
+                logger.info("Password updated in Keycloak for user ID: {}", keycloakId);
+            }
+
+            // Fetch user from local database
+            User user = userRepository.findByKeycloakId(keycloakId)
+                    .orElseThrow(() -> new RuntimeException("User not found in database: " + keycloakId));
+            logger.debug("Fetched user from local database: {}", user.getUsername());
+
+            // Update local user fields
+            user.setFirstname(userDTO.getFirstname());
+            user.setLastname(userDTO.getLastName());
+            user.setEmail(userDTO.getEmail());
+
+            // Update password in local database if provided
+            if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+                logger.info("Password updated in local database for user ID: {}", user.getId());
+            }
+
+            // Save updated user to local database
+            User updatedUser = userRepository.save(user);
+            logger.info("Successfully updated user in local database with ID: {}", updatedUser.getId());
+
+            return updatedUser;
+        } catch (NotFoundException e) {
+            logger.error("User not found in Keycloak: {}", e.getMessage(), e);
+            throw new RuntimeException("User not found in Keycloak.", e);
+        } catch (Exception e) {
+            logger.error("Error updating user with Keycloak ID: {}: {}", keycloakId, e.getMessage(), e);
+            throw new RuntimeException("Failed to update user.", e);
+        }
     }
 
 }

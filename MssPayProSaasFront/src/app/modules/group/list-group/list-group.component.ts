@@ -8,7 +8,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { KeycloakService } from '../../keycloak/keycloak.service';
 import { HttpClient } from '@angular/common/http';
 import { GroupInvoicesComponent } from '../../facture/group-invoices/group-invoices.component';
-import { FactureService } from '../../facture/facture.service'; // Import FactureService
+import { FactureService } from '../../facture/facture.service';
+import { DeleteConfirmationDialogComponent, DeleteConfirmationDialogData } from '../../api-service/add-api/delete-confirmation-dialog/delete-confirmation-dialog.component';
 
 @Component({
   selector: 'app-list-group',
@@ -24,7 +25,7 @@ export class ListGroupComponent implements OnInit {
 
   constructor(
     private groupService: GroupService,
-    private factureService: FactureService, // Inject FactureService
+    private factureService: FactureService,
     private router: Router,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -34,7 +35,7 @@ export class ListGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAdmin = this.keycloakService.hasRole('admin');
-    this.generateInvoicesOnPageLoad(); // Generate invoices when the page loads
+    this.generateInvoicesOnPageLoad();
     this.loadGroups();
   }
 
@@ -43,7 +44,12 @@ export class ListGroupComponent implements OnInit {
       next: () => {
         console.log('Invoices generated successfully on page load');
       },
-     
+      error: (err) => {
+        console.error('Error generating invoices on page load:', err);
+        this.snackBar.open('Failed to generate invoices on page load', 'Close', {
+          duration: 3000,
+        });
+      },
     });
   }
 
@@ -51,7 +57,7 @@ export class ListGroupComponent implements OnInit {
     this.groupService.getAllGroups().subscribe(
       (groups) => {
         this.groups = groups;
-        this.totalGroups = groups.length;  // Initialize totalGroups with the length of groups
+        this.totalGroups = groups.length;
       },
       (error) => {
         console.error('Error fetching groups:', error);
@@ -105,38 +111,85 @@ export class ListGroupComponent implements OnInit {
     });
   }
 
+  /**
+   * Opens a confirmation dialog before deleting a group.
+   * @param groupId The ID of the group to delete.
+   */
   deleteGroup(groupId: string): void {
-    this.groupService.deleteGroup(groupId).subscribe(
-      () => {
-        console.log('Group deleted successfully.');
-        this.loadGroups();
-      },
-      (error) => {
-        console.error('Error deleting group:', error);
-        this.snackBar.open('Failed to delete group', 'Close', {
-          duration: 3000,
-        });
-      }
-    );
-  }
+    const dialogData: DeleteConfirmationDialogData = {
+      title: 'Confirm Deletion',
+      message: 'Are you sure you want to delete this client?',
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+    };
 
-  toggleToken(groupId: string): void {
-    this.groupService.toggleAccessToken(groupId).subscribe({
-      next: (group) => {
-        console.log('Token toggled for group:', group);
-        this.snackBar.open('Token toggled successfully', 'Close', {
-          duration: 3000,
-        });
-        this.loadGroups();
-      },
-      error: (err) => {
-        console.error('Error toggling token:', err);
-        this.snackBar.open('Failed to toggle token', 'Close', {
-          duration: 3000,
-        });
-      },
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
+      width: '350px',
+      data: dialogData,
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        // Proceed with deletion
+        this.groupService.deleteGroup(groupId).subscribe(
+          () => {
+            console.log('Group deleted successfully.');
+            this.snackBar.open('Group deleted successfully.', 'Close', {
+              duration: 3000,
+            });
+            this.loadGroups();
+          },
+          (error) => {
+            console.error('Error deleting group:', error);
+            this.snackBar.open('Failed to delete group.', 'Close', {
+              duration: 3000,
+            });
+          }
+        );
+      } else {
+        // Deletion was canceled
+        console.log('Group deletion canceled.');
+      }
     });
   }
+
+  deleteAccessTokens(groupId: string): void {
+    const dialogData: DeleteConfirmationDialogData = {
+      title: 'Confirm Token Deletion',
+      message: 'Are you sure you want to delete all access tokens for this group?',
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+    };
+
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
+      width: '350px',
+      data: dialogData,
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.groupService.deleteAllAccessTokens(groupId).subscribe(
+          (response) => {
+            console.log(response.message);
+            this.snackBar.open(response.message, 'Close', {
+              duration: 3000,
+            });
+            this.loadGroups();
+          },
+          (error) => {
+            console.error('Error deleting access tokens:', error);
+            this.snackBar.open('Failed to delete access tokens.', 'Close', {
+              duration: 3000,
+            });
+          }
+        );
+      } else {
+        // Deletion was canceled
+        console.log('Access token deletion canceled.');
+      }
+    });
+  }
+
 
   loadGroupServices(groupId: string): void {
     this.http
@@ -155,10 +208,10 @@ export class ListGroupComponent implements OnInit {
     console.log('Viewing invoices for group ID:', groupId);
     const dialogRef = this.dialog.open(GroupInvoicesComponent, {
       width: '600px',
-      data: { groupId: groupId } // Pass the correct group ID
+      data: { groupId: groupId },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       // Handle dialog close if necessary
     });
   }

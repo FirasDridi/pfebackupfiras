@@ -3,20 +3,27 @@ package com.mss.adminservice.Config;
 import com.mss.adminservice.Entities.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 public class UserDTO {
+    @JsonIgnore // Ignore 'id' during deserialization
+
     private Long id;
     private String userName;
     private String firstname;
     private String lastName;
     private String email;
     private String password;
-    private String keycloakId; // Add this line
-    private Set<String> roles;  // Add this field to store roles
+    private String keycloakId;
+    private Set<String> roles;
+
+    @JsonProperty("superUser")
+    private transient boolean isSuperUser;
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -25,6 +32,6 @@ public class UserDTO {
         this.lastName = user.getLastname();
         this.email = user.getEmail();
         this.password = user.getPassword();
-        this.keycloakId = user.getKeycloakId(); // Add this line
+        this.keycloakId = user.getKeycloakId();
     }
 }

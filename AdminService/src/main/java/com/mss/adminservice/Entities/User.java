@@ -34,13 +34,13 @@ public class User {
     @Column
     private String lastname;
 
-    @Column(unique = false)
+    @Column(unique = true, nullable = false)
     private String keycloakId;
 
-    @ManyToMany(mappedBy = "users",cascade = CascadeType.REMOVE)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @ManyToMany(mappedBy = "users")
     @JsonBackReference
     private Set<Group> groups = new HashSet<>();
+
 
     @ManyToMany
     @JoinTable(
@@ -56,6 +56,9 @@ public class User {
     @Column(name = "service_name")
     private Set<String> services = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private Set<Notification> notifications = new HashSet<>();
     // getters, setters, equals, hashCode, toString methods
 
     @Override

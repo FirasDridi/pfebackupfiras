@@ -13,9 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/groups")
@@ -32,12 +30,47 @@ public class GroupController {
         Group savedGroup = groupService.addGroup(new Group(group));
         return ResponseEntity.ok(savedGroup);
     }
+    /**
+     * Deletes an access token from a specified group.
+     *
+     * @param groupId   The ID of the group.
+     * @return A ResponseEntity with a success or error message.
+     */
+    @DeleteMapping("/{groupId}/access-tokens")
+    public ResponseEntity<Map<String, Object>> deleteAllAccessTokens(@PathVariable Long groupId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            groupService.deleteAllAccessTokens(groupId);
+            response.put("message", "All access tokens removed successfully from group.");
+            response.put("success", true);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.put("message", e.getMessage());
+            response.put("success", false);
+            return ResponseEntity.status(400).body(response);
+        } catch (RuntimeException e) {
+            response.put("message", "An error occurred while deleting access tokens: " + e.getMessage());
+            response.put("success", false);
+            return ResponseEntity.status(500).body(response);
+        }
+    }
 
     @PutMapping(value = "/update/{groupId}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Group> updateGroup(@PathVariable Long groupId, @RequestBody Group groupDetails) {
+    public ResponseEntity<Group> updateGroup(
+            @PathVariable Long groupId,
+            @RequestBody Group groupDetails) {
+
+        // Basic validation
+        if (groupDetails.getName() == null || groupDetails.getName().isBlank()) {
+            throw new IllegalArgumentException("Group name cannot be null or empty");
+        }
+
+        // You can add more validations as needed
+
         Group updatedGroup = groupService.updateGroup(groupId, groupDetails);
         return ResponseEntity.ok(updatedGroup);
     }
+
 
     @DeleteMapping("/delete/{groupId}")
     public ResponseEntity<Void> deleteGroup(@PathVariable Long groupId) {

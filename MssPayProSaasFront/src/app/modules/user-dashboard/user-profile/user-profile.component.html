@@ -1,39 +1,64 @@
 <div class="user-profile-card">
-    <div *ngIf="user" class="user-details">
+    <form [formGroup]="editProfileForm" (ngSubmit)="saveProfile()">
         <h3 class="profile-header">
-            <mat-icon>person</mat-icon> User Details
+            <mat-icon>person</mat-icon> Edit Profile
         </h3>
         <table class="profile-table">
-            <tr>
-                <td>
-                    <mat-icon>account_circle</mat-icon>
-                </td>
-                <td class="label">Username:</td>
-                <td>{{ user.username }}</td>
-            </tr>
-            <tr>
-                <td>
-                    <mat-icon>email</mat-icon>
-                </td>
-                <td class="label">Email:</td>
-                <td>{{ user.email }}</td>
-            </tr>
             <tr>
                 <td>
                     <mat-icon>person</mat-icon>
                 </td>
                 <td class="label">First Name:</td>
-                <td>{{ user.firstName }}</td>
+                <td>
+                    <input matInput formControlName="firstname" placeholder="First Name" />
+                    <div *ngIf="editProfileForm.controls['firstname'].invalid && (editProfileForm.controls['firstname'].dirty || editProfileForm.controls['firstname'].touched)" class="error">
+                        First name is required.
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td>
                     <mat-icon>person</mat-icon>
                 </td>
                 <td class="label">Last Name:</td>
-                <td>{{ user.lastName }}</td>
+                <td>
+                    <input matInput formControlName="lastName" placeholder="Last Name" />
+                    <div *ngIf="editProfileForm.controls['lastName'].invalid && (editProfileForm.controls['lastName'].dirty || editProfileForm.controls['lastName'].touched)" class="error">
+                        Last name is required.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-icon>email</mat-icon>
+                </td>
+                <td class="label">Email:</td>
+                <td>
+                    <input matInput formControlName="email" placeholder="Email" />
+                    <div *ngIf="editProfileForm.controls['email'].invalid && (editProfileForm.controls['email'].dirty || editProfileForm.controls['email'].touched)" class="error">
+                        Valid email is required.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-icon>lock</mat-icon>
+                </td>
+                <td class="label">New Password:</td>
+                <td>
+                    <input matInput formControlName="password" type="password" placeholder="New Password" />
+                    <div *ngIf="editProfileForm.controls['password'].invalid && (editProfileForm.controls['password'].dirty || editProfileForm.controls['password'].touched)" class="error">
+                        Password must be at least 6 characters.
+                    </div>
+                </td>
             </tr>
         </table>
-    </div>
+        <div class="edit-profile-button">
+            <button mat-raised-button color="primary" type="submit">
+              <mat-icon>save</mat-icon> Save Profile
+          </button>
+        </div>
+    </form>
 
     <div *ngIf="userGroups && userGroups.length > 0" class="user-groups">
         <h3 class="profile-header">
