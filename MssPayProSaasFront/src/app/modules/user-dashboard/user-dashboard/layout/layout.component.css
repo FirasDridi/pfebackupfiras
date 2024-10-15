@@ -1,0 +1,140 @@
+/* CSS Styling */
+
+
+/* Toolbar Styling */
+
+.custom-toolbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    background-color: #00695C;
+    color: #FFFFFF;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Modern
+Styling for the Toolbar */
+
+.modern-toolbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background: linear-gradient(135deg, #004D40, #00695C);
+    color: #FFFFFF;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+}
+
+
+/* Tab Group Styling */
+
+.custom-tab-group {
+    margin: 0;
+    background-color: #004D40;
+    border-bottom: 3px solid #004D40;
+    flex-grow: 1;
+}
+
+
+/* Modern Styling for Tab Group */
+
+.modern-tab-group {
+    margin: 0;
+    background-color: #004D40;
+    border-bottom: 3px solid #004D40;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    flex-grow: 1;
+}
+
+
+/* Tab Section Styling */
+
+.tab-section-container {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    color: #FFFFFF;
+    padding: 12px 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.tab-section-container:hover {
+    background-color: #00796B;
+    color: #FFFFFF;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Icon Styling */
+
+.tab-section-container mat-icon {
+    margin-right: 12px;
+    font-size: 24px;
+}
+
+
+/* Page Content Styling */
+
+.page-content {
+    padding: 40px;
+    background-color: #FFFFFF;
+    min-height: calc(100vh - 180px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.page-content:hover {
+    transform: translateY(-5px);
+}
+
+
+/* Modern Page Content Styling */
+
+.modern-page-content {
+    padding: 30px;
+    background-color: #FAFAFA;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+
+/* Responsive Design
+    */
+
+@media (max-width: 768px) {
+    .custom-toolbar {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px 20px;
+    }
+    .page-content {
+        padding: 20px;
+    }
+    .modern-page-content {
+        padding: 20px;
+    }
+    .tab-section-container {
+        font-size: 16px;
+        padding: 10px 16px;
+    }
+}
+
+
+/* Animation Keyframes */
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

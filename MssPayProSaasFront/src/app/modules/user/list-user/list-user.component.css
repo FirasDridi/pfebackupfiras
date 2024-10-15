@@ -1,0 +1,165 @@
+/* Title Styling - Center Alignment */
+
+.user-list-header {
+    display: flex;
+    align-items: center;
+    /* Vertical alignment */
+    justify-content: center;
+    /* Center the text and icon */
+    font-size: 2rem;
+    /* Ensure the text size is consistent */
+    color: #00796b;
+    /* Color for both icon and text */
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.user-list-header .title-icon {
+    font-size: 2rem;
+    /* Make the icon the same size as the text */
+    margin-right: 10px;
+    /* Space between the icon and the text */
+    vertical-align: middle;
+}
+
+.user-list-header span {
+    display: inline-block;
+    line-height: 1.2;
+    /* Ensures the text aligns properly with the icon */
+}
+
+
+/* General Table and Container Styles */
+
+.user-list-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    max-width: 1000px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.user-table th {
+    text-align: left;
+    background-color: #f5f5f5;
+    color: #0f520f;
+    font-weight: bold;
+}
+
+.user-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.header-cell {
+    background-color: #00796b;
+    color: white;
+    font-weight: bold;
+    text-align: left;
+    padding: 12px;
+}
+
+.header-icon {
+    margin-right: 8px;
+    font-size: 1.4rem;
+    vertical-align: middle;
+}
+
+.data-cell {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.data-row:hover {
+    background-color: #f1f1f1;
+}
+
+.actions-cell {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-button {
+    margin: 0 4px;
+}
+
+.icon {
+    font-size: 22px;
+}
+
+.edit-icon {
+    color: #0288d1;
+}
+
+.delete-icon {
+    color: #d32f2f;
+}
+
+.invoice-icon {
+    color: #7b1fa2;
+}
+
+.superuser-badge {
+    color: gold;
+    font-size: 1.2rem;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+
+/* Paginator Styles */
+
+.paginator {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+
+/* Spinner Styles */
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+
+/* Responsive Adjustments */
+
+@media (max-width: 768px) {
+    .header-cell,
+    .data-cell {
+        padding: 10px;
+        font-size: 14px;
+    }
+    .header-icon {
+        font-size: 1rem;
+    }
+    .title {
+        font-size: 1.5rem;
+    }
+    .title-icon {
+        font-size: 1.8rem;
+    }
+}

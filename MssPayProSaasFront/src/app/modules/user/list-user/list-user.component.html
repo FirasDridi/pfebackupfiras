@@ -1,0 +1,95 @@
+<!-- File Path: src/app/modules/user/list-user/list-user.component.html -->
+
+<div class="user-list-container">
+    <h2 class="user-list-header">
+        <mat-icon class="title-icon">people</mat-icon>
+        <span>User List</span>
+    </h2>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="spinner-container">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <!-- User Table -->
+    <div class="table-wrapper" *ngIf="!isLoading">
+        <table mat-table [dataSource]="dataSource" class="user-table mat-elevation-z8">
+            <!-- Username Column -->
+            <ng-container matColumnDef="userName">
+                <th mat-header-cell *matHeaderCellDef class="header-cell">
+                    <mat-icon class="header-icon">person</mat-icon> Username
+                </th>
+                <td mat-cell *matCellDef="let user" class="data-cell">
+                    {{user.userName}}
+                    <mat-icon *ngIf="user.isSuperuser" class="superuser-badge" matTooltip="Superuser">star</mat-icon>
+                </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef class="header-cell">
+                    <mat-icon class="header-icon">email</mat-icon> Email
+                </th>
+                <td mat-cell *matCellDef="let user" class="data-cell">{{user.email || user.emailId}}</td>
+            </ng-container>
+
+            <!-- First Name Column -->
+            <ng-container matColumnDef="firstname">
+                <th mat-header-cell *matHeaderCellDef class="header-cell">
+                    <mat-icon class="header-icon">badge</mat-icon> First Name
+                </th>
+                <td mat-cell *matCellDef="let user" class="data-cell">{{user.firstname || user.firstName}}</td>
+            </ng-container>
+
+            <!-- Last Name Column -->
+            <ng-container matColumnDef="lastName">
+                <th mat-header-cell *matHeaderCellDef class="header-cell">
+                    <mat-icon class="header-icon">badge</mat-icon> Last Name
+                </th>
+                <td mat-cell *matCellDef="let user" class="data-cell">{{user.lastName}}</td>
+            </ng-container>
+
+            <!-- Groups Column -->
+            <ng-container matColumnDef="groups">
+                <th mat-header-cell *matHeaderCellDef class="header-cell">
+                    <mat-icon class="header-icon">group</mat-icon> clients
+                </th>
+                <td mat-cell *matCellDef="let user" class="data-cell">
+                    <ng-container *ngIf="user.groups && user.groups.length > 0; else noGroups">
+                        <span *ngFor="let group of user.groups; let i = index">
+                          {{ group.groupName }}
+                          <span *ngIf="i < user.groups.length - 1">, </span>
+                        </span>
+                    </ng-container>
+                    <ng-template #noGroups>
+                        <span>None</span>
+                    </ng-template>
+                </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef class="header-cell">
+                    <mat-icon class="header-icon">settings</mat-icon> Actions
+                </th>
+                <td mat-cell *matCellDef="let user" class="data-cell actions-cell">
+                    <button mat-icon-button (click)="editUser(user)" matTooltip="Edit User" class="action-button">
+                    <mat-icon class="icon edit-icon">edit</mat-icon>
+                </button>
+                    <button mat-icon-button (click)="deleteUser(user.id)" matTooltip="Delete User" class="action-button">
+                    <mat-icon class="icon delete-icon">delete</mat-icon>
+                </button>
+                    <button mat-icon-button (click)="viewUserInvoices(user.id)" matTooltip="View Invoices" class="action-button">
+                    <mat-icon class="icon invoice-icon">receipt</mat-icon>
+                </button>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns" class="data-row"></tr>
+        </table>
+    </div>
+
+    <mat-paginator [length]="totalUsers" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons class="paginator"></mat-paginator>
+</div>

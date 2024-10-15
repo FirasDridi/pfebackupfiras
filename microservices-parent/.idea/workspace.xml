@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1cf73d64-5d96-435e-92d2-6814699784fc" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../projet/service-manager/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../projet/service-manager/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../projet/service-manager/src/main/java/com/mss/servicemanager/Controller/ServiceUsageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../projet/service-manager/src/main/java/com/mss/servicemanager/Controller/ServiceUsageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../projet/service-manager/src/main/java/com/mss/servicemanager/Services/ServiceUsageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../projet/service-manager/src/main/java/com/mss/servicemanager/Services/ServiceUsageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../projet/service-manager/src/main/java/com/mss/servicemanager/entities/service.java" beforeDir="false" afterPath="$PROJECT_DIR$/../projet/service-manager/src/main/java/com/mss/servicemanager/entities/service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../projet/service-manager/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../projet/service-manager/src/main/resources/application.yml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../projet/service-manager" />
+  </component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="2hgolPdQcVujd2EO1vwuNsAtnMn" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "develop",
+    "jdk.selected.JAVA_MODULE": "corretto-17",
+    "last_opened_file_path": "C:/workspaces/discovery-service",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
+  }
+}]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.AdminServiceApplication">
+    <configuration name="AdminServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="AdminService" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.mss.adminservice.AdminServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ConfigServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="config-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.configservice.ConfigServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DiscoveryServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="discovery-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.discoveryservice.DiscoveryServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GatewayServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="gateway-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.gatewayservice.GatewayServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServiceManagerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="ACTIVE_PROFILES" value="DB_HOST=localhost;DB_NAME=mssService;POSTGRES_USER=postgres;POSTGRES_PASSWORD=firas " />
+      <option name="DEBUG_MODE" value="true" />
+      <module name="service-manager" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.mss.servicemanager.ServiceManagerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Spring Boot.AdminServiceApplication" />
+      <item itemvalue="Spring Boot.ConfigServiceApplication" />
+      <item itemvalue="Spring Boot.DiscoveryServiceApplication" />
+      <item itemvalue="Spring Boot.GatewayServiceApplication" />
+      <item itemvalue="Spring Boot.ServiceManagerApplication" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1cf73d64-5d96-435e-92d2-6814699784fc" name="Changes" comment="" />
+      <created>1718025235592</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1718025235592</updated>
+      <workItem from="1718025236672" duration="5358000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

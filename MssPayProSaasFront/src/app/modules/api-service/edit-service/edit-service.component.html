@@ -1,0 +1,33 @@
+<h2>Edit Service</h2>
+
+<form class="edit-form">
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="selectedService.name" name="name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea matInput [(ngModel)]="selectedService.description" name="description"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Pricing</mat-label>
+        <input matInput [(ngModel)]="selectedService.pricing" name="pricing" type="number" />
+        <mat-error *ngIf="!isPricingValid()">Please enter a valid number.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Endpoint</mat-label>
+        <input matInput [(ngModel)]="selectedService.endpoint" name="endpoint" />
+    </mat-form-field>
+
+    <div class="button-container">
+        <button mat-raised-button color="primary" class="save-button" (click)="saveService()">
+      <mat-icon>save</mat-icon> Save
+    </button>
+        <button mat-raised-button color="warn" class="cancel-button" type="button" (click)="cancelEdit()">
+      <mat-icon>cancel</mat-icon> Cancel
+    </button>
+    </div>
+</form>

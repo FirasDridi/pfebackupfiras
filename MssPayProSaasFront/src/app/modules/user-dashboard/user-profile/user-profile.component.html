@@ -1,0 +1,49 @@
+<div class="page-title-container">
+    <h1 class="page-title">{{ userGroups[0].groupName || 'Client Group' }}</h1>
+</div>
+
+<div class="user-profile-card">
+    <div class="profile-header">
+        <mat-icon class="profile-icon">person</mat-icon>
+        <span>User Profile</span>
+    </div>
+    <div class="profile-content">
+        <div class="profile-row">
+            <mat-icon class="profile-row-icon">person</mat-icon>
+            <div class="profile-row-content">
+                <div class="label">First Name:</div>
+                <div>{{ user?.firstName }}</div>
+            </div>
+        </div>
+        <div class="profile-row">
+            <mat-icon class="profile-row-icon">person</mat-icon>
+            <div class="profile-row-content">
+                <div class="label">Last Name:</div>
+                <div>{{ user?.lastName }}</div>
+            </div>
+        </div>
+        <div class="profile-row">
+            <mat-icon class="profile-row-icon">email</mat-icon>
+            <div class="profile-row-content">
+                <div class="label">Email:</div>
+                <div>{{ user?.email }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="edit-profile-button">
+        <button mat-raised-button color="primary" class="custom-edit-button" (click)="openEditProfileDialog()">
+          <mat-icon>edit</mat-icon> Edit Profile
+      </button>
+    </div>
+
+    <div *ngIf="userGroups && userGroups.length > 0" class="client-section">
+        <div class="client-header">
+            <mat-icon class="client-icon">group</mat-icon>
+            <span>Client Information</span>
+        </div>
+        <div class="client-info">
+            <mat-icon class="client-icon-info">business</mat-icon>
+            <span class="client-name">{{ userGroups[0].groupName }}</span>
+        </div>
+    </div>
+</div>

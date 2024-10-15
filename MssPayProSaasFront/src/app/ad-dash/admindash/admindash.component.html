@@ -1,0 +1,92 @@
+<mat-toolbar color="primary" class="layout-topbar">
+    <!-- Menu Button on the Left -->
+    <button mat-icon-button class="menu-button" (click)="toggleMenu()">
+      <mat-icon>menu</mat-icon>
+  </button>
+
+    <!-- Logo section centered -->
+    <div class="logo-container">
+        <img src="assets/logo2.png" alt="Logo" class="center-logo" />
+    </div>
+
+    <!-- Right side menu items -->
+    <span class="layout-topbar-right">
+      <ng-container *ngIf="isLoggedIn">
+          <!-- Admin Menu -->
+          <button mat-button [matMenuTriggerFor]="menu">
+              <mat-icon>admin_panel_settings</mat-icon> Admin
+          </button>
+          <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="accountManagement()">
+                  <mat-icon>account_circle</mat-icon>
+                  <span>Profile</span>
+    </button>
+    <button mat-menu-item (click)="logout()">
+                  <mat-icon>logout</mat-icon>
+                  <span>Logout</span>
+              </button>
+    </mat-menu>
+
+    <!-- Notifications -->
+    <button mat-icon-button [matMenuTriggerFor]="notificationsMenu">
+              <mat-icon>notifications</mat-icon>
+              <span *ngIf="unreadCount > 0" [matBadge]="unreadCount" matBadgePosition="above after" matBadgeColor="warn"></span>
+          </button>
+    <mat-menu #notificationsMenu="matMenu" class="notifications-menu">
+        <ng-container *ngIf="notifications.length > 0">
+            <ng-container *ngFor="let notification of notifications">
+                <button mat-menu-item>
+                          <div class="notification-item">
+                              <mat-icon class="notification-icon">notifications</mat-icon>
+                              <div class="notification-details">
+                                  <strong>{{ notification.user?.username || 'Unknown User' }}</strong> from
+                                  <strong>{{ notification?.groupName || 'Unknown Group' }}</strong> wants to subscribe to
+                                  <strong>{{ notification?.serviceName || 'Unknown Service' }}</strong>
+                                  <br>
+                                  <mat-icon class="date-icon">event</mat-icon>
+                                  <span>{{ notification.timestamp | date: 'medium' }}</span>
+                              </div>
+                          </div>
+                          <div class="actions">
+                              <button mat-button color="primary" (click)="approveRequest(notification.id)">Approve</button>
+                <button mat-button color="warn" (click)="rejectRequest(notification.id)">Reject</button>
+                </div>
+                </button>
+                <mat-divider></mat-divider>
+            </ng-container>
+        </ng-container>
+        <button mat-menu-item *ngIf="notifications.length === 0">
+                  No new notifications
+              </button>
+    </mat-menu>
+    </ng-container>
+
+    <!-- Login button for unauthenticated users -->
+    <button mat-raised-button color="accent" (click)="login()" *ngIf="!isLoggedIn" class="login-button">
+          Login
+      </button>
+    </span>
+</mat-toolbar>
+
+<!-- Loading spinner -->
+<div *ngIf="isLoading" class="loading-spinner">
+    <mat-progress-spinner mode="indeterminate" color="accent"></mat-progress-spinner>
+</div>
+
+<!-- Main layout with Angular Material -->
+<mat-sidenav-container class="layout-main">
+    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isCollapsed" (openedChange)="isCollapsed = !($event)">
+        <mat-nav-list class="sidebar-content">
+            <mat-list-item *ngFor="let item of menuItems" (click)="onNavItemClicked(); sidenav.toggle()" [routerLink]="item.path" class="menu-item">
+                <mat-icon mat-list-icon>{{ item.icon }}</mat-icon>
+                <span>{{ item.title }}</span>
+            </mat-list-item>
+        </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <div class="layout-content">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

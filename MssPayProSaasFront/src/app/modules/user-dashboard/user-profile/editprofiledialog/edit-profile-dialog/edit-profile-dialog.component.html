@@ -1,0 +1,32 @@
+<h3 mat-dialog-title>Edit Profile</h3>
+<mat-dialog-content>
+    <form [formGroup]="editProfileForm">
+        <mat-form-field>
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstname">
+            <mat-error *ngIf="editProfileForm.controls['firstname'].invalid">First name is required.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName">
+            <mat-error *ngIf="editProfileForm.controls['lastName'].invalid">Last name is required.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+            <mat-error *ngIf="editProfileForm.controls['email'].invalid">Valid email is required.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>New Password</mat-label>
+            <input matInput type="password" formControlName="password">
+            <mat-error *ngIf="editProfileForm.controls['password'].invalid">Password must be at least 6 characters.</mat-error>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button color="primary" (click)="saveProfile()">Save</button>
+</mat-dialog-actions>

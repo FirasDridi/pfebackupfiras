@@ -1,0 +1,10 @@
+{
+    "realm": "mss-authent",
+    "auth-server-url": "http://localhost:8088/",
+    "tokenEndpoint": "http://localhost:8080/realms/mss-authent/protocol/openid-connect/token",
+    "ssl-required": "external",
+    "resource": "frontendfiras",
+    "public-client": true,
+    "confidential-port": 0
+
+}

@@ -1,0 +1,30 @@
+<!-- File Path: src/app/modules/user-dashboard/layout/layout.component.html -->
+
+<mat-toolbar color="primary" class="layout-topbar modern-toolbar">
+    <mat-toolbar-row>
+        <!-- Navigation Tabs -->
+        <mat-tab-group class="modern-tab-group" backgroundColor="primary" color="accent" (selectedIndexChange)="navigateToTab($event)">
+            <!-- Other Navigation Tabs -->
+            <mat-tab *ngFor="let item of menuItems" [label]="item.label || ''">
+                <ng-template mat-tab-label>
+                    <section class="tab-section-container">
+                        <mat-icon>{{ item.icon }}</mat-icon> {{ item.label || '' }}
+                    </section>
+                </ng-template>
+            </mat-tab>
+
+            <!-- Logout Tab -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <section class="tab-section-container" (click)="logout()">
+                        <mat-icon>logout</mat-icon> Logout
+                    </section>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-card class="modern-page-content mat-elevation-z4">
+    <router-outlet></router-outlet>
+</mat-card>

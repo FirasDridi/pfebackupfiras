@@ -1,0 +1,19 @@
+<form [formGroup]="editUserForm" (ngSubmit)="save()">
+    <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="userName" [readonly]="true">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" [readonly]="false">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="firstname" [readonly]="false">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="lastName" [readonly]="false">
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Save</button>
+</form>

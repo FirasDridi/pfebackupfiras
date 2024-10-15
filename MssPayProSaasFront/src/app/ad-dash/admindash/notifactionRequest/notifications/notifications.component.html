@@ -1,0 +1,29 @@
+<div class="notifications-container">
+    <button mat-icon-button [matMenuTriggerFor]="notificationsMenu">
+    <mat-icon>notifications</mat-icon>
+    <span *ngIf="unreadCount > 0" [matBadge]="unreadCount" matBadgePosition="above after" matBadgeColor="warn"></span>
+  </button>
+
+    <mat-menu #notificationsMenu="matMenu" class="notifications-menu">
+        <ng-container *ngIf="notifications.length > 0">
+            <ng-container *ngFor="let notification of notifications">
+                <div class="notification-item">
+                    <div class="notification-content">
+                        <strong>{{ notification.user?.username }}</strong> wants to subscribe to <strong>{{ notification.serviceName }}</strong>
+                        <div class="notification-date">
+                            Date: {{ notification.timestamp | date: 'medium' }}
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        <button mat-button color="primary" (click)="approveRequest(notification.id)">Approve</button>
+                        <button mat-button color="warn" (click)="rejectRequest(notification.id)">Reject</button>
+                    </div>
+                    <mat-divider></mat-divider>
+                </div>
+            </ng-container>
+        </ng-container>
+        <button mat-menu-item *ngIf="notifications.length === 0">
+      No new notifications
+    </button>
+    </mat-menu>
+</div>

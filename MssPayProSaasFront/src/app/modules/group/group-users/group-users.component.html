@@ -1,0 +1,58 @@
+<!-- File Path: src/app/modules/group/group-users/group-users.component.html -->
+
+<div class="group-users-container">
+    <mat-card class="group-users-card">
+        <mat-card-header>
+            <mat-card-title>Users in {{ groupName }}</mat-card-title>
+            <button mat-raised-button color="primary" class="add-users-button" (click)="openAddUserDialog()">
+        <mat-icon>person_add</mat-icon> Add Users
+      </button>
+        </mat-card-header>
+        <mat-card-content>
+            <!-- Loading Spinner -->
+            <div *ngIf="isLoading" class="spinner-container">
+                <mat-spinner></mat-spinner>
+            </div>
+
+            <!-- Users Table -->
+            <table mat-table [dataSource]="users" class="mat-elevation-z8" *ngIf="!isLoading && users.length > 0">
+
+                <!-- Username Column -->
+                <ng-container matColumnDef="username">
+                    <th mat-header-cell *matHeaderCellDef> Username </th>
+                    <td mat-cell *matCellDef="let user">
+                        <span class="username-text">{{ user.username }}</span>
+                        <mat-icon *ngIf="user.isSuperuser" class="superuser-badge" matTooltip="Super User">star</mat-icon>
+                    </td>
+                </ng-container>
+
+                <!-- First Name Column -->
+                <ng-container matColumnDef="firstname">
+                    <th mat-header-cell *matHeaderCellDef> First Name </th>
+                    <td mat-cell *matCellDef="let user"> {{ user.firstname }} </td>
+                </ng-container>
+
+                <!-- Last Name Column -->
+                <ng-container matColumnDef="lastname">
+                    <th mat-header-cell *matHeaderCellDef> Last Name </th>
+                    <td mat-cell *matCellDef="let user"> {{ user.lastname }} </td>
+                </ng-container>
+
+                <!-- Email Column -->
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef> Email </th>
+                    <td mat-cell *matCellDef="let user"> {{ user.email }} </td>
+                </ng-container>
+
+                <!-- Header and Row Definitions -->
+                <tr mat-header-row *matHeaderRowDef="['username', 'firstname', 'lastname', 'email']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['username', 'firstname', 'lastname', 'email'];"></tr>
+            </table>
+
+            <!-- No Users Message -->
+            <div *ngIf="!isLoading && users.length === 0" class="no-users-message">
+                <p>No users available in this Client.</p>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

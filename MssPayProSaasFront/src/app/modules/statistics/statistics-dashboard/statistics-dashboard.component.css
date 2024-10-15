@@ -1,0 +1,124 @@
+/* Header Section with Logos */
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+
+/* Logo Styles */
+
+.logo {
+    height: 100px;
+    /* Consistent height for both logos */
+    width: auto;
+}
+
+.logo-left {
+    align-self: flex-start;
+}
+
+.logo-right {
+    align-self: flex-end;
+}
+
+
+/* Charts Grid */
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* Chart Container */
+
+.chart-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.chart-container:hover {
+    transform: translateY(-5px);
+}
+
+
+/* Chart Title */
+
+.chart-title {
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+
+/* Custom Legend */
+
+.custom-legend {
+    margin-top: 15px;
+}
+
+.legend-title {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.legend-color {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    margin-right: 10px;
+}
+
+.legend-label {
+    font-weight: 500;
+    margin-right: 5px;
+    color: #222;
+}
+
+.legend-value {
+    color: #444;
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .header-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    .logo {
+        margin-bottom: 10px;
+    }
+    .chart-title {
+        font-size: 1rem;
+    }
+    .legend-title {
+        font-size: 0.9rem;
+    }
+    .legend-item {
+        font-size: 0.9rem;
+    }
+}

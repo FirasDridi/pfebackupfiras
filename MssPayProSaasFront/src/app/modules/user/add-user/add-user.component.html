@@ -1,0 +1,28 @@
+<form [formGroup]="addUserForm" (ngSubmit)="onSubmit()" class="add-user-form">
+
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="firstName">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="lastName">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password">
+    </mat-form-field>
+
+    <div class="button-group">
+        <button mat-raised-button color="primary" type="submit">Add User</button>
+        <button mat-button type="button" (click)="dialogRef.close()">Cancel</button>
+    </div>
+</form>

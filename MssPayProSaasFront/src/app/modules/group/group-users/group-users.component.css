@@ -1,0 +1,157 @@
+/* File Path: src/app/modules/group/group-users/group-users.component.css */
+
+.group-users-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Changed to flex-start for better vertical alignment */
+    padding: 20px;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    /* Changed from height to min-height to accommodate content */
+}
+
+.group-users-card {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Added subtle shadow for depth */
+    border-radius: 8px;
+    /* Ensures consistency with .mat-elevation-z8 */
+}
+
+mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0;
+}
+
+mat-card-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    /* Added color for better readability */
+}
+
+.add-users-button {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Adds space between icon and text */
+    transition: background-color 0.3s, transform 0.3s;
+    /* Smooth transitions */
+}
+
+.add-users-button:hover {
+    background-color: #1976d2;
+    /* Darker shade on hover */
+    transform: translateY(-2px);
+    /* Slight lift on hover */
+}
+
+mat-card-content {
+    padding-top: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    /* Ensures borders are collapsed */
+}
+
+mat-header-cell,
+mat-cell {
+    padding: 16px;
+    text-align: left;
+    /* Aligns text to the left for readability */
+    vertical-align: middle;
+    /* Centers content vertically */
+}
+
+mat-header-cell {
+    background-color: #e0e0e0;
+    /* Light gray background for headers */
+    font-weight: bold;
+}
+
+.mat-elevation-z8 {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+
+/* Styles for Super User Badge */
+
+.superuser-badge {
+    color: gold;
+    /* Gold color for the star icon */
+    margin-left: 5px;
+    /* Space between username and star */
+    vertical-align: middle;
+    /* Aligns the star vertically with text */
+    cursor: pointer;
+    /* Indicates interactivity */
+    font-size: 18px;
+    /* Adjusts size for visibility */
+    transition: transform 0.2s, color 0.2s;
+    /* Smooth transitions */
+}
+
+.superuser-badge:hover {
+    transform: scale(1.2);
+    /* Slightly enlarges the star on hover */
+    color: #ffc107;
+    /* Changes color on hover for emphasis */
+}
+
+
+/* Spinner Container */
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    /* Increased height for better visibility */
+}
+
+
+/* No Users Message */
+
+.no-users-message {
+    text-align: center;
+    color: #757575;
+    /* Medium gray for subtlety */
+    margin-top: 20px;
+    font-size: 18px;
+    /* Larger font for emphasis */
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .group-users-container {
+        padding: 10px;
+    }
+    mat-card-title {
+        font-size: 20px;
+    }
+    .add-users-button {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    mat-header-cell,
+    mat-cell {
+        padding: 12px;
+    }
+    .superuser-badge {
+        font-size: 16px;
+    }
+    .no-users-message {
+        font-size: 16px;
+    }
+}

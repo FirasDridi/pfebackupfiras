@@ -1,0 +1,202 @@
+/* Page Header */
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-bottom: 2px solid #009688;
+}
+
+.logo-container {
+    width: 100px;
+}
+
+.left-logo {
+    margin-right: auto;
+}
+
+.right-logo {
+    margin-left: auto;
+}
+
+.center-logo {
+    height: 70px;
+    object-fit: contain;
+}
+
+.center-logo1 {
+    height: 60px;
+    object-fit: contain;
+}
+
+.page-title {
+    font-size: 2rem;
+    text-align: center;
+    color: #009688;
+    margin: 0;
+}
+
+
+/* Services Container */
+
+.services-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+
+/* Service Card */
+
+.service-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.inactive-service {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+
+/* Service Header */
+
+.service-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.service-header h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0;
+}
+
+.service-status {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.active-status {
+    background-color: #4caf50;
+    color: #ffffff;
+}
+
+.inactive-status {
+    background-color: #f44336;
+    color: #ffffff;
+}
+
+
+/* Service Content */
+
+.service-content {
+    margin-bottom: 20px;
+}
+
+.service-detail {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.service-detail strong {
+    margin-left: 5px;
+}
+
+.detail-icon {
+    font-size: 1.2rem;
+    color: #009688;
+    margin-right: 5px;
+}
+
+
+/* Endpoint Detail for wrapping long text */
+
+.endpoint-detail {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.endpoint-text {
+    word-break: break-all;
+}
+
+.service-groups {
+    list-style-type: none;
+    padding: 0;
+    margin-left: 22px;
+}
+
+.service-groups li {
+    margin-bottom: 5px;
+}
+
+
+/* Service Actions */
+
+.service-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.view-details-button {
+    color: #ffffff !important;
+    background-color: #009688 !important;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.subscription-button {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.subscription-button[disabled] {
+    background-color: #e0e0e0 !important;
+    color: #777 !important;
+}
+
+
+/* Paginator */
+
+.mat-paginator {
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.5rem;
+    }
+    .service-header h3 {
+        font-size: 1.2rem;
+    }
+    .service-detail {
+        font-size: 0.85rem;
+    }
+}

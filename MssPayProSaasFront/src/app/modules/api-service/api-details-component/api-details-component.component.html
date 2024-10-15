@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Service Call History</h2>
+
+<mat-dialog-content *ngIf="groupedServiceDetails && groupedServiceDetails.length > 0" class="service-details-content">
+    <div *ngFor="let group of groupedServiceDetails" class="group-item">
+        <h3>{{ group.userName }} - {{ group.date }}</h3>
+        <p><strong>Service Name:</strong> {{ group.serviceName }}</p>
+        <ul>
+            <li *ngFor="let detail of group.details">
+                <strong>Timestamp:</strong> {{ detail.timestamp | date:'medium' }}<br />
+                <strong>Amount:</strong> {{ detail.amount | currency }}<br />
+                <strong>Client Name:</strong> {{ detail.groupName }}<br />
+                <hr />
+            </li>
+        </ul>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="close()" class="close-button" color="primary">Close</button>
+</mat-dialog-actions>

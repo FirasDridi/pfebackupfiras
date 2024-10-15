@@ -1,0 +1,53 @@
+<!-- File Path: src/app/modules/group/list-group/list-group.component.html -->
+
+<div class="client-list-container">
+    <h2 class="title">
+        <mat-icon class="title-icon">group</mat-icon> Clients List
+    </h2>
+    <div class="card-grid">
+        <div class="group-card" *ngFor="let group of groups">
+            <h3 class="group-name">{{ group.name }}</h3>
+            <div class="actions">
+                <!-- View Users Button -->
+                <button mat-icon-button (click)="viewUsers(group.id?.toString())" matTooltip="View Users" class="icon-button view-users">
+          <mat-icon class="action-icon">group</mat-icon>
+        </button>
+
+                <!-- Add Users Button -->
+                <button mat-icon-button (click)="addUsers(group.id?.toString(), group.name)" matTooltip="Add Users" class="icon-button add-users">
+          <mat-icon class="action-icon">person_add</mat-icon>
+        </button>
+
+                <!-- Edit Group Button -->
+                <button mat-icon-button (click)="editGroup(group)" matTooltip="Edit Group" class="icon-button edit-group">
+          <mat-icon class="action-icon">edit</mat-icon>
+        </button>
+
+                <!-- Delete Group Button -->
+                <button mat-icon-button (click)="deleteGroup(group.id?.toString())" matTooltip="Delete Group" class="icon-button delete-group">
+          <mat-icon class="action-icon">delete</mat-icon>
+        </button>
+
+                <!-- View Invoices Button -->
+                <button mat-icon-button (click)="viewGroupInvoices(group.id?.toString())" matTooltip="View Invoices" class="icon-button view-invoices">
+          <mat-icon class="action-icon">receipt</mat-icon>
+        </button>
+
+                <!-- Token Actions -->
+                <div class="token-actions">
+                    <!-- If tokenGenerated is true, show Delete Token button -->
+                    <button *ngIf="group.tokenGenerated" mat-button color="warn" (click)="deleteAccessTokens(group.id?.toString())" class="delete-token-button">
+            Delete Token
+          </button>
+
+                    <!-- If tokenGenerated is false, show a message -->
+                    <span *ngIf="!group.tokenGenerated" class="no-token-message">
+            Client does not have access to services.
+          </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <mat-paginator [length]="totalGroups" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons class="paginator">
+    </mat-paginator>
+</div>

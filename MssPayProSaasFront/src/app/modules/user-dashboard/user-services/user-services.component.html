@@ -1,0 +1,42 @@
+<div class="page-content mat-elevation-z8">
+    <div class="header">
+        <h2 class="header-title">Your Service Usage Summary</h2>
+        <div class="total-cost">
+            <h3>Total Cost Consumption</h3>
+            <span class="cost-value">${{ totalCost }}</span>
+        </div>
+    </div>
+
+    <mat-card class="service-card" *ngIf="services.length > 0">
+        <mat-table [dataSource]="dataSource" class="custom-mat-table">
+            <ng-container matColumnDef="service">
+                <mat-header-cell *matHeaderCellDef>Service</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <div class="service-name">{{ element.endpoint }}</div>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="timestamp">
+                <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{ element.timestamp | date: 'short' }}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cost">
+                <mat-header-cell *matHeaderCellDef>Cost</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <div class="service-cost">{{ element.pricing }}</div>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+    </mat-card>
+
+    <div *ngIf="services.length === 0" class="no-services-message">
+        <h4>No services have been used yet.</h4>
+        <p>Start using our services to see consumption details here.</p>
+    </div>
+</div>

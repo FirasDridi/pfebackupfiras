@@ -1,0 +1,10 @@
+<div *ngIf="requests.length > 0">
+    <div *ngFor="let request of requests">
+        <p>Subscription Request for Service ID: {{ request.serviceId }} from Group ID: {{ request.groupId }}</p>
+        <button (click)="approveRequest(request.id)">Approve</button>
+        <button (click)="rejectRequest(request.id)">Reject</button>
+    </div>
+</div>
+<div *ngIf="requests.length === 0">
+    <p>No pending requests</p>
+</div>

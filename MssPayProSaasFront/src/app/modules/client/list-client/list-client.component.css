@@ -1,0 +1,70 @@
+.mat-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mat-cell,
+.mat-header-cell {
+    padding: 8px 16px;
+}
+
+.delete-button {
+    padding: 6px;
+}
+
+.edit-form {
+    max-width: 600px;
+    /* Adjust as needed */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-form h2 {
+    margin-bottom: 20px;
+}
+
+.edit-form form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Two columns */
+    grid-gap: 20px;
+    /* Gap between columns */
+}
+
+.edit-form form {
+    display: flex;
+    flex-direction: column;
+    /* Change to column layout */
+    align-items: center;
+    /* Center items horizontally */
+}
+
+.edit-form .save-button,
+.edit-form .cancel-button {
+    margin-top: 20px;
+    /* Adjust top margin for both buttons */
+    margin-right: 10px;
+    /* Add margin between the buttons */
+}
+
+.edit-form button {
+    margin-top: 20px;
+    /* Adjust top margin for buttons */
+    padding: 15px 25px;
+    /* Increase padding for larger buttons */
+    width: 200px;
+    /* Adjust button width */
+}
+
+
+/* Define a custom CSS class for the colored header */
+
+.custom-header-cell {
+    background-color: #ffffff;
+    /* Example color - you can change this to your desired color */
+    color: rgb(64, 0, 255);
+    /* Text color for better contrast */
+}

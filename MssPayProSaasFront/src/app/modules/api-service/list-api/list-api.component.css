@@ -1,0 +1,233 @@
+/* list-api.component.css */
+
+
+/* Ensure the layout takes full height */
+
+.layout-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: space-between;
+}
+
+
+/* Table styling to expand and fill available space */
+
+.mat-table {
+    width: 100%;
+    border-collapse: collapse;
+    flex-grow: 1;
+    margin-bottom: 100px;
+    /* Increased space between the table and the paginator */
+}
+
+.mat-header-cell,
+.mat-cell {
+    padding: 8px 16px;
+}
+
+
+/* Specific header cell styles */
+
+.custom-header-cell.created-date {
+    background-color: #e0f7fa;
+    color: #00796b;
+}
+
+.custom-header-cell.last-modified {
+    background-color: #ffe0b2;
+    color: #e65100;
+}
+
+.custom-header-cell.name {
+    background-color: #d1c4e9;
+    color: #4a148c;
+}
+
+.custom-header-cell.description {
+    background-color: #c8e6c9;
+    color: #2e7d32;
+}
+
+.custom-header-cell.endpoint {
+    background-color: #e1bee7;
+    /* Light purple */
+    color: #6a1b9a;
+    /* Dark purple */
+}
+
+.custom-header-cell.pricing {
+    background-color: #ffcdd2;
+    color: #c62828;
+}
+
+.custom-header-cell.status {
+    background-color: #fff9c4;
+    color: #f9a825;
+}
+
+.custom-header-cell.actions {
+    background-color: #ffcc80;
+    color: #e65100;
+}
+
+
+/* Alternating row colors */
+
+.mat-row:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.mat-cell {
+    text-align: left;
+    font-size: 14px;
+}
+
+
+/* Button styling */
+
+button.mat-icon-button {
+    margin-right: 8px;
+}
+
+button.mat-icon-button mat-icon {
+    color: #1e88e5;
+}
+
+button.mat-icon-button.color-warn mat-icon {
+    color: #e53935;
+}
+
+button.mat-icon-button.color-primary mat-icon {
+    color: #1e88e5;
+}
+
+
+/* Form field and paginator styling */
+
+.mat-form-field {
+    width: 100%;
+}
+
+.mat-select {
+    min-width: 200px;
+}
+
+
+/* Position the paginator at the bottom */
+
+.paginator-container {
+    display: flex;
+    justify-content: center;
+    background-color: #f9f9f9;
+    padding: 10px 0;
+    margin-top: auto;
+    margin-bottom: 50px;
+    /* Added margin at the bottom for even more spacing */
+}
+
+
+/* Ensure the table has enough space above the paginator */
+
+.no-results-message {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+
+/* Additional layout adjustments */
+
+.mat-sidenav-container {
+    padding: 0;
+    /* Remove padding/margin around the sidenav container */
+}
+
+.mat-sidenav-content {
+    padding: 0;
+    /* Remove padding/margin around the content area */
+}
+
+
+/* Header container and buttons */
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.add-api-button {
+    margin-bottom: 10px;
+    margin-right: 15px;
+}
+
+.add-api-button button:hover {
+    background-color: #0055a5;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.mat-form-field.search-field {
+    width: 100%;
+    max-width: 400px;
+    margin-left: auto;
+    background-color: #ffffff;
+    border-radius: 25px;
+    padding-left: 10px;
+    padding-right: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.mat-form-field.search-field input {
+    padding-left: 5px;
+}
+
+.mat-form-field.search-field .mat-icon {
+    color: #757575;
+}
+
+.mat-form-field.search-field .mat-icon-button {
+    margin-right: 8px;
+}
+
+.mat-form-field.search-field .mat-icon-button mat-icon {
+    color: #757575;
+}
+
+.mat-form-field.search-field:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Endpoint cell styling */
+
+.endpoint-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+.endpoint-cell:hover {
+    overflow: visible;
+    white-space: normal;
+    word-break: break-all;
+}
+
+
+/* Adjust column widths */
+
+.mat-column-endpoint {
+    max-width: 200px;
+}
+
+.mat-column-description {
+    max-width: 250px;
+}

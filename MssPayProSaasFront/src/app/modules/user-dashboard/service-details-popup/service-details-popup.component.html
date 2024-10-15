@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Service Details</h2>
+<mat-dialog-content>
+    <div *ngIf="isLoading">
+        <p>Loading...</p>
+    </div>
+    <div *ngIf="!isLoading">
+        <ul>
+            <li *ngFor="let message of logMessages">{{ message }}</li>
+        </ul>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="onClose()">Close</button>
+</mat-dialog-actions>

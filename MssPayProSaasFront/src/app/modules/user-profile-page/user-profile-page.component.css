@@ -1,0 +1,27 @@
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-circle img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+}
+
+.apis-section,
+.groups-section {
+    margin-top: 20px;
+}
+
+h2 {
+    margin-bottom: 10px;
+}

@@ -1,0 +1,16 @@
+<!-- File Path: src/app/home/home.component.html -->
+
+<div class="home-container">
+    <div class="logo-wrapper">
+        <img src="assets/logo2.png" alt="Logo" class="home-logo" />
+    </div>
+    <div class="description">
+        <h1>Welcome to MssPayProSaas</h1>
+        <p>
+            Your one-stop solution for API services. Please log in to access your dashboard.
+        </p>
+        <button mat-raised-button color="primary" (click)="login()" *ngIf="!isLoggedIn">
+      Login
+    </button>
+    </div>
+</div>

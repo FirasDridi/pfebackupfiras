@@ -1,0 +1,27 @@
+<div class="add-client-container">
+    <h2 class="title">
+        <mat-icon class="title-icon">person_add </mat-icon> Add Client
+    </h2>
+    <form [formGroup]="groupForm" (ngSubmit)="onSubmit()" class="client-form">
+        <mat-form-field class="full-width">
+            <mat-label>Client Name</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-error *ngIf="groupForm.controls['name'].hasError('required')">
+                Client Name is required
+            </mat-error>
+
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="4"></textarea>
+        </mat-form-field>
+        <div class="button-group">
+            <button mat-raised-button color="primary" type="submit">
+              <mat-icon class="button-icon">check_circle</mat-icon> Add Client
+          </button>
+            <button mat-raised-button color="warn" type="button" (click)="onCancel()">
+              <mat-icon class="button-icon">cancel</mat-icon> Cancel
+          </button>
+        </div>
+    </form>
+</div>

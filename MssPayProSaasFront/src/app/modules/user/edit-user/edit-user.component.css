@@ -1,0 +1,15 @@
+/* File: edit-user.component.css */
+
+mat-form-field {
+    width: 100%;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.dialog-actions button {
+    margin-left: 10px;
+}

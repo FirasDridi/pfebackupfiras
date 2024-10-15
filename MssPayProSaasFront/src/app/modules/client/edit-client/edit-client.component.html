@@ -1,0 +1,69 @@
+<h2>Edit client</h2>
+<form class="edit-form">
+    <!-- Name Field -->
+    <mat-form-field appearance="fill">
+        <mat-label for="name">Name</mat-label>
+        <input matInput [(ngModel)]="selectedClient.name" name="name" />
+    </mat-form-field>
+
+    <!-- First Name Field -->
+    <mat-form-field appearance="fill">
+        <mat-label for="prenom">First Name</mat-label>
+        <input matInput [(ngModel)]="selectedClient.prenom" name="prenom" id="prenom" autocomplete="given-name" />
+    </mat-form-field>
+
+    <!-- Email Field -->
+    <mat-form-field appearance="fill">
+        <mat-label for="email">Email</mat-label>
+        <input matInput [(ngModel)]="selectedClient.email" name="email" id="email" autocomplete="email" />
+    </mat-form-field>
+
+    <!-- Password Field -->
+    <mat-form-field appearance="fill">
+        <mat-label for="motDePasse">Password</mat-label>
+        <input matInput [(ngModel)]="selectedClient.motDePasse" name="motDePasse" id="motDePasse" type="password" autocomplete="new-password" />
+    </mat-form-field>
+
+    <!-- Address Field -->
+    <mat-form-field appearance="fill">
+        <mat-label for="adresse">Address</mat-label>
+        <input matInput [(ngModel)]="selectedClient.adresse" name="adresse" id="adresse" autocomplete="address-line1" />
+    </mat-form-field>
+
+    <!-- Phone Number Field -->
+    <mat-form-field appearance="fill">
+        <mat-label for="numeroDeTelephone">Phone Number</mat-label>
+        <input matInput [(ngModel)]="selectedClient.numeroDeTelephone" name="numeroDeTelephone" id="numeroDeTelephone" autocomplete="tel" />
+    </mat-form-field>
+
+    <!-- Active Field -->
+    <mat-checkbox [(ngModel)]="selectedClient.isActive" name="isActive" id="isActive">Active</mat-checkbox>
+
+    <!-- Billing Address Field -->
+    <mat-form-field appearance="fill">
+        <mat-label for="billingAddress">Billing Address</mat-label>
+        <input matInput [(ngModel)]="selectedClient.billingAddress" name="billingAddress" id="billingAddress" autocomplete="address-line1" />
+    </mat-form-field>
+
+    <!-- Package Id Field -->
+    <mat-form-field appearance="fill">
+        <mat-label for="packageId">Package Id</mat-label>
+        <input matInput [(ngModel)]="selectedClient.packageId" name="packageId" id="packageId" type="number" autocomplete="off" />
+    </mat-form-field>
+
+    <!-- Package Name Field -->
+    <mat-form-field appearance="fill">
+        <mat-label for="packageName">Package Name</mat-label>
+        <input matInput [(ngModel)]="selectedClient.packageName" name="packageName" id="packageName" autocomplete="off" />
+    </mat-form-field>
+    <!-- Save and Cancel Buttons -->
+    <div class="button-container">
+        <button mat-raised-button color="primary" class="save-button" (click)="saveclient()">
+      <mat-icon>save</mat-icon> Save
+    </button>
+
+        <button mat-raised-button color="warn" class="cancel-button" type="button" (click)="cancelEdit()">
+      <mat-icon>cancel</mat-icon> Cancel
+    </button>
+    </div>
+</form>

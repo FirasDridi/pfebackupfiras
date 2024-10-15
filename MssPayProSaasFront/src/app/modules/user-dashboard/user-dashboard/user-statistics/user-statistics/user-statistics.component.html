@@ -1,0 +1,61 @@
+<div class="statistics-container">
+    <!-- Grid Layout for Charts -->
+    <div class="charts-grid">
+        <!-- Service Usage Overview Card -->
+        <mat-card class="stat-card">
+            <mat-card-header>
+                <mat-card-title>SERVICE USAGE OVERVIEW</mat-card-title>
+                <mat-card-subtitle>Service Call Breakdown</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <ngx-charts-pie-chart [scheme]="colorScheme" [results]="userUsageChartData" [legend]="false" [labels]="true" [doughnut]="true" [arcWidth]="0.25" [view]="[320, 320]">
+                </ngx-charts-pie-chart>
+                <div class="custom-legend">
+                    <div *ngFor="let entry of userUsageChartData" class="legend-item">
+                        <span class="legend-color" [style.backgroundColor]="colorScheme.domain[userUsageChartData.indexOf(entry) % colorScheme.domain.length]" title="Color"></span>
+                        <span class="legend-label">{{ entry.name || 'Unknown Service' }}:</span>
+                        <span class="legend-value">{{ entry.value | number }} calls</span>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Cost Overview Card -->
+        <mat-card class="stat-card">
+            <mat-card-header>
+                <mat-card-title>COST OVERVIEW</mat-card-title>
+                <mat-card-subtitle>Cost by Service</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <ngx-charts-pie-chart [scheme]="colorScheme" [results]="userRevenueChartData" [legend]="false" [labels]="true" [doughnut]="true" [arcWidth]="0.25" [view]="[320, 320]">
+                </ngx-charts-pie-chart>
+                <div class="custom-legend">
+                    <div *ngFor="let entry of userRevenueChartData" class="legend-item">
+                        <span class="legend-color" [style.backgroundColor]="colorScheme.domain[userRevenueChartData.indexOf(entry) % colorScheme.domain.length]" title="Color"></span>
+                        <span class="legend-label">{{ entry.name || 'Unknown Service' }}:</span>
+                        <span class="legend-value">${{ entry.value | number:'1.2-2' }} cost</span>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- User Activity Overview Card -->
+        <mat-card class="stat-card">
+            <mat-card-header>
+                <mat-card-title>USER ACTIVITY OVERVIEW</mat-card-title>
+                <mat-card-subtitle>Usage by User</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <ngx-charts-pie-chart [scheme]="colorScheme" [results]="userUsageChartData" [legend]="false" [labels]="true" [doughnut]="true" [arcWidth]="0.25" [view]="[320, 320]">
+                </ngx-charts-pie-chart>
+                <div class="custom-legend">
+                    <div *ngFor="let entry of userUsageChartData" class="legend-item">
+                        <span class="legend-color" [style.backgroundColor]="colorScheme.domain[userUsageChartData.indexOf(entry) % colorScheme.domain.length]" title="Color"></span>
+                        <span class="legend-label">{{ entry.name || 'Unknown User' }}:</span>
+                        <span class="legend-value">{{ entry.value | number }} calls</span>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

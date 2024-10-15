@@ -1,0 +1,37 @@
+<form *ngIf="serviceForm" [formGroup]="serviceForm" (ngSubmit)="createService()">
+    <mat-card-header>
+        <mat-card-title>Add Service</mat-card-title>
+    </mat-card-header>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" (keyup)="checkNameExists()" />
+        <mat-error *ngIf="nameExists">Service name already exists. Please choose a different name.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Pricing</mat-label>
+        <input matInput formControlName="pricing" type="number" />
+        <mat-error *ngIf="serviceForm.get('pricing')?.hasError('pattern')">
+            Please enter a valid number.
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Endpoint</mat-label>
+        <input matInput formControlName="endpoint" />
+        <mat-error *ngIf="serviceForm.get('endpoint')?.hasError('required')">
+            Endpoint is required.
+        </mat-error>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="status">Status</mat-checkbox>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="serviceForm.invalid">Add</button>
+    <button mat-raised-button color="warn" type="button" (click)="clearForm()">Clear</button>
+</form>

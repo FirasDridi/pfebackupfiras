@@ -1,0 +1,25 @@
+.my-account-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.mat-primary {
+    background-color: #20b2aa !important;
+}
+
+.mat-accent {
+    background-color: #20b2aa !important;
+}
+
+.mat-warn {
+    background-color: #20b2aa !important;
+}
